@@ -50,7 +50,7 @@ public class proveedor extends javax.swing.JInternalFrame {
 
     /**
      * Prepara el formulario y jtable para crear un nuevo proveedor (Habilita y
- limpia los campos correspondientes
+     * limpia los campos correspondientes
      */
     public void nuevo() {
         Utilidades.setEditableTexto(this.panelFormulario, true, null, true, "");
@@ -180,11 +180,11 @@ public class proveedor extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         Object[] proveedor = {
             txtCodigo.getText(), txtNombre.getText(), txtDireccion.getText(),
             txtCorreo.getText(), txtNit.getText(),
-            txtTelefono.getText(),getFecha(), txtContacto.getText(),
+            txtTelefono.getText(), getFecha(), txtContacto.getText(),
             peticiones.selected(rbEstado)
         };
 
@@ -220,7 +220,7 @@ public class proveedor extends javax.swing.JInternalFrame {
         }
 
         String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
-        
+
         Object[] proveedor = {
             txtCodigo.getText(), txtNombre.getText(), txtDireccion.getText(),
             txtCorreo.getText(), txtNit.getText(),
@@ -730,24 +730,28 @@ public class proveedor extends javax.swing.JInternalFrame {
 
     private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
         // TODO add your handling code here:
-        int s = 0;
+        int resp;
+        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
+        if (resp == 0) {
+            int s = 0;
 
-        /* Guardamos el ID de dla fila selecciona en la variable s */
-        s = tableResultados.getSelectedRow();
+            /* Guardamos el ID de dla fila selecciona en la variable s */
+            s = tableResultados.getSelectedRow();
 
-        /* Validamos que hallan seleccionado */
-        if (s < 0) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
-            return;
-        }
+            /* Validamos que hallan seleccionado */
+            if (s < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+                return;
+            }
 
-        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 
-        if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
-            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
-            nuevo();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
+                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
+                nuevo();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            }
         }
     }//GEN-LAST:event_bnSuprimirActionPerformed
 

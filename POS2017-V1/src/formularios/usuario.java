@@ -24,7 +24,7 @@ public class usuario extends javax.swing.JInternalFrame {
      * Variables para realizar las transacciones con la base de datos
      */
     String nombreTabla = "usuario";
-    String[] titulos = {"Id", "Nombre Usuario", "Usuario", "Contraseña", "Puesto", "Estado", "Fecha Reg",};
+    String[] titulos = {"Id", "Nombre Usuario", "Usuario", "Puesto", "Estado", "Fecha Reg",};
     String campos = "nombre, nombreusuario, contrasenia, puesto, fec_reg, estado";
     String nombreId = "idusuario";
 
@@ -57,7 +57,7 @@ public class usuario extends javax.swing.JInternalFrame {
         Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
         Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
         //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
-        
+
         model.setRowCount(0);
         txtNombre.requestFocus();
     }
@@ -178,29 +178,28 @@ public class usuario extends javax.swing.JInternalFrame {
         }
 
     }
-    
+
     /* Funcion para llenar la tabla cuando se busque un usuario en especifico
      por el código, nombre, nit  */
     public void llenarPerfil(String nombre) {
 
-      //  try {
-            /* Limpiamos la tabla */
-            //model.setRowCount(0);
+        //  try {
+        /* Limpiamos la tabla */
+        //model.setRowCount(0);
 
-            /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
+        /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
              los clientes relaciones con el valor a buscar en la base de datos. 
             
              - Los datos recibidos lo guardamos en el objeto ResulSet para luego
              llenar la tabla con los registros.
             
-             */
-           // ResultSet rs = peticiones.consultaMenu(nombre);
-            //Object[] registro = new Object[6];
+         */
+        // ResultSet rs = peticiones.consultaMenu(nombre);
+        //Object[] registro = new Object[6];
 
-            /* Hacemos un while que mientras en rs hallan datos el ira agregando
+        /* Hacemos un while que mientras en rs hallan datos el ira agregando
              filas a la tabla. */
-            //while (rs.next()) {
-
+        //while (rs.next()) {
 //                registro[0] = rs.getString("idusuario");
 //                registro[1] = rs.getString("nombre");
 //                registro[2] = rs.getString("nombreusuario");
@@ -213,15 +212,15 @@ public class usuario extends javax.swing.JInternalFrame {
 //                    registro[4] = ("Inactivo");
 //                }
 //                registro[5] = rs.getString("fec_reg");
-                //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
-                //model.addRow(registro);
-          //  }
-            //tableResultados.setModel(model);
-       // } catch (SQLException ex) {
-         //   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
+        //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
+        //model.addRow(registro);
+        //  }
+        //tableResultados.setModel(model);
+        // } catch (SQLException ex) {
+        //   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         //}
     }
-    
+
     /**
      * Realiza la transacción para guardar los recistros de un nuevo usuario
      */
@@ -231,19 +230,19 @@ public class usuario extends javax.swing.JInternalFrame {
             JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         Object[] usuario = {
             txtNombre.getText(), txtUsuario.getText(), txtPassword.getText(),
             txtPuesto.getText(), getFecha(), peticiones.selected(rbEstado)
         };
-        
+
         /* Llamamos a la funcion guardarRegistros la cual recibe como parametro
          el nombre de la tabla, los campos y los valores a insertar del usuario */
-        int id=peticiones.guardarRegistrosId(nombreTabla, campos, usuario);
+        int id = peticiones.guardarRegistrosId(nombreTabla, campos, usuario);
         //llenarPerfil(""+id);
         //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
-        
-        if ( id != 0) {
+
+        if (id != 0) {
             JOptionPane.showMessageDialog(rootPane, "El registro ha sido Guardado correctamente ");
             nuevo();
         } else {
@@ -1236,24 +1235,28 @@ public class usuario extends javax.swing.JInternalFrame {
 
     private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
         // TODO add your handling code here:
-        int s = 0;
+        int resp;
+        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
+        if (resp == 0) {
+            int s = 0;
 
-        /* Guardamos el ID de dla fila selecciona en la variable s */
-        s = tableResultados.getSelectedRow();
+            /* Guardamos el ID de dla fila selecciona en la variable s */
+            s = tableResultados.getSelectedRow();
 
-        /* Validamos que hallan seleccionado */
-        if (s < 0) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
-            return;
-        }
+            /* Validamos que hallan seleccionado */
+            if (s < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+                return;
+            }
 
-        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 
-        if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
-            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
-            nuevo();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
+                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
+                nuevo();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            }
         }
     }//GEN-LAST:event_bnSuprimirActionPerformed
 
