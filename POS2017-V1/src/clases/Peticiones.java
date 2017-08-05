@@ -1,0 +1,151 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package clases;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JRadioButton;
+
+/**
+ *
+ * @author GLARA
+ */
+public class Peticiones extends Datos {
+
+    /**
+     * Paa varias condiciones WHERE campo1=condicionid1 and campo2=condicionid2
+     * ...
+     *
+     * @param nombreTabla , nombre de la tabla en la BD
+     * @param campos , los campos de la tabla a consultar ejem: nombre, codigo ,
+     * rirección etc
+     * @param valores , los valores que guardaremos en la BD.
+     * @return
+     */
+    public boolean guardarRegistros(String nombreTabla, String campos, Object[] valores) {
+
+        boolean gravado = false;
+        gravado = this.guardar(nombreTabla, this.stringToArray(campos, ","), valores);
+        if (gravado == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public int guardarRegistrosId(String nombreTabla, String campos, Object[] valores) {
+
+        int gravado = 0;
+        gravado = this.guardarReturnId(nombreTabla, this.stringToArray(campos, ","), valores);
+        return gravado;
+    }
+
+    public boolean actualizarRegistroId(String nomTabla, String campos, Object[] valores, String columnaId) {
+        boolean gravado = false;
+        gravado = this.modificar(nomTabla, this.adjuntarSimbolo(campos, ",", "?") + " where " + columnaId + " = ? ", valores);
+        return gravado;
+    }
+
+    public int eliminarRegistro(String nombreTabla, String nomColumnaCambiar, String nomColumnaId, Object id) {
+
+        int gravado = 0;
+        gravado = this.eliminar(nombreTabla, nomColumnaCambiar, nomColumnaId, id);
+        return gravado;
+    }
+
+    public ResultSet consultaClientes(String buscar) {
+
+        String sql = "SELECT * FROM clientes "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='"
+                + buscar + "' or nit='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    /* nombre de la tabla, campo id de la tabla, valor del id*/
+    public ResultSet consultaRegistrosId(String tabla, String id, String nombreId) {
+
+        String sql = "SELECT * FROM " + tabla + " WHERE " + nombreId
+                + " = '" + id + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet consultaProveedores(String buscar) {
+
+        String sql = "SELECT * FROM proveedor "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='"
+                + buscar + "' or nit='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet consultaCategoria(String buscar) {
+
+        String sql = "SELECT * FROM categoria "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet consultaUnidad(String buscar) {
+
+        String sql = "SELECT * FROM unidad "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet consultaMarca(String buscar) {
+
+        String sql = "SELECT * FROM marca "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet consultaUsuario(String buscar) {
+
+        String sql = "SELECT * FROM usuario "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or nombreusuario='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public int consultaMenu(String buscar) {
+
+        String sql = "SELECT * FROM menu WHERE nombre = " + buscar;
+        int id = 0;
+
+        ResultSet rs = this.getRegistros(sql);
+        try {
+            while (rs.next()) {
+                id = rs.getInt("idmenu");
+            }
+        } catch (SQLException e) {
+        }
+
+        return id;
+    }
+
+    public Object selected(JRadioButton rbEstado) {
+
+        if (rbEstado.isSelected()) {
+            return "1";
+        } else {
+            return "0";
+        }
+
+    }
+}
