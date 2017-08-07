@@ -505,7 +505,7 @@
                       <Font name="Tahoma" size="12" style="1"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="Contrase&#xf1;a"/>
+                    <Property name="text" type="java.lang.String" value="Contrase&#xf1;a*"/>
                     <Property name="horizontalTextPosition" type="int" value="4"/>
                   </Properties>
                   <Constraints>
@@ -724,6 +724,7 @@
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="name" type="java.lang.String" value="password" noResource="true"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

@@ -293,8 +293,11 @@ public class Datos {
             return true;
 
         } catch (SQLException ex) {
-            System.out.print(ex.getMessage());
-            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
+            if (ex.getErrorCode() == 1062) {
+                JOptionPane.showMessageDialog(null, "Ya existe el código, porfavor asigne uno diferente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Problema con: " + ex.getErrorCode());
+            }
             return false;
         }
     }
@@ -313,7 +316,6 @@ public class Datos {
             /* El createStatement cree un cuadro donde se puede insertar codigo
              sql, el statement se podria decir que es el cuadro en blanco que
              te da el phpmyadmin para insertar codigo sql. */
-            
             ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             //ps = Conexion.getPreparedStatement(sql);
             setValores(ps, valores);
@@ -329,8 +331,11 @@ public class Datos {
             return id;
 
         } catch (SQLException ex) {
-            System.out.print(ex.getMessage());
-            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
+            if (ex.getErrorCode() == 1062) {
+                JOptionPane.showMessageDialog(null, "Ya existe el código, porfavor asigne uno diferente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Problema con: " + ex.getErrorCode());
+            }
             return id;
         }
     }
@@ -357,7 +362,12 @@ public class Datos {
             ps.close();
             return true;
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Problema con" + ex);
+            if (ex.getErrorCode() == 1062) {
+                JOptionPane.showMessageDialog(null, "Ya existe el código, porfavor asigne uno diferente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Problema con: " + ex);
+            }
+
         }
         return op;
     }
@@ -386,7 +396,7 @@ public class Datos {
                 Object nuevoValor = "0";
                 opcion = eliminarTemporal(nombreTabla, nomColumnaCambiar, nomColumnaId, id, nuevoValor);
             } else {
-                JOptionPane.showMessageDialog(null, ex);
+                JOptionPane.showMessageDialog(null, "Problema con: " + ex);
             }
         }
         return opcion;
@@ -425,7 +435,7 @@ public class Datos {
             //System.out.print(resultado);
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            JOptionPane.showMessageDialog(null, "Problema con: " + ex);
         }
         //System.out.println(sql);
         return resultado;

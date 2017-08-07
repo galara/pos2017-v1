@@ -662,7 +662,7 @@ public class usuario extends javax.swing.JInternalFrame {
 
             labelNit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
             labelNit.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-            labelNit.setText("Contraseña");
+            labelNit.setText("Contraseña*");
             labelNit.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
             panelFormulario.add(labelNit, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 120, 25));
 
@@ -746,6 +746,7 @@ public class usuario extends javax.swing.JInternalFrame {
             txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
             txtPassword.setDisabledTextColor(new java.awt.Color(0, 0, 0));
             txtPassword.setEnabled(false);
+            txtPassword.setName("password"); // NOI18N
             panelFormulario.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 250, 25));
 
             tbPane2.addTab("Usuariio", panelFormulario);
