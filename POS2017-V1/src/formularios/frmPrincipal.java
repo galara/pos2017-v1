@@ -6,6 +6,7 @@ package formularios;
 
 import clases.AccesoUsuario;
 import clases.AddForms;
+import clases.ImagenFondo;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import javax.swing.ImageIcon;
 
@@ -25,7 +26,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setIconImage(new ImageIcon(getClass().getResource("/imagenes/pointofsale.png")).getImage());
-        //panel_center.setBorder(new ImagenFondo("/imagenes/superprecios.png"));
+        //panel_center.setBorder(new ImagenFondo("/imagenes/bgimg.jpg"));
     }
 
     public void setUsuario(String usuario, int id, int perfil, String cargo, String nombre) {
@@ -118,7 +119,7 @@ public class frmPrincipal extends javax.swing.JFrame {
 
         bCorte.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bCorte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/corte.png"))); // NOI18N
-        bCorte.setText(" Cote");
+        bCorte.setText(" Corte");
         bCorte.setToolTipText("");
         bCorte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,7 +153,7 @@ public class frmPrincipal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bVentas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bClientes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -165,7 +166,7 @@ public class frmPrincipal extends javax.swing.JFrame {
                 .addComponent(bCorte)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bReportes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addComponent(bSalir)
                 .addContainerGap())
         );
@@ -277,13 +278,18 @@ public class frmPrincipal extends javax.swing.JFrame {
             newfrm = new cliente();
         }
         AddForms.adminInternalFrame(panel_center, newfrm);
-        
-        
+
+
     }//GEN-LAST:event_bClientesActionPerformed
 
     private void bProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductosActionPerformed
         // TODO add your handling code here:
-        
+        productos newfrm = new productos();
+        if (newfrm == null) {
+            newfrm = new productos();
+        }
+        AddForms.adminInternalFrame(panel_center, newfrm);
+
     }//GEN-LAST:event_bProductosActionPerformed
 
     private void bInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInventarioActionPerformed

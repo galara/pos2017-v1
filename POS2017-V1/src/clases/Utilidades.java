@@ -26,6 +26,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
+import org.edisoncor.gui.comboBox.ComboBoxRect;
 
 /**
  *
@@ -206,6 +207,32 @@ public class Utilidades {
                         }
                     }
                 }//
+                else if (cm[i] instanceof ComboBoxRect) {
+                    if (((ComboBoxRect) cm[i]).getSelectedIndex() == -1) {
+                        if (opcion) {
+                            cm[i].setBackground(BObligatorio);
+                            cm[i].setForeground(FObligatorio);
+                        } else {
+                            cm[i].setBackground(Color.white);
+                            cm[i].setForeground(Color.BLACK);
+                        }
+                        existen = true;
+                    } else if (((ComboBoxRect) cm[i]).getSelectedIndex() != -1) {
+                        cm[i].setBackground(Color.white);
+                        cm[i].setForeground(Color.BLACK);
+
+                        if (((ComboBoxRect) cm[i]).getSelectedIndex() == 0) {
+                            if (opcion) {
+                                cm[i].setBackground(BObligatorio);
+                                cm[i].setForeground(FObligatorio);
+                            } else {
+                                cm[i].setBackground(Color.white);
+                                cm[i].setForeground(Color.BLACK);
+                            }
+                            existen = true;
+                        }
+                    }
+                }//
             }
         }
         return existen;
@@ -287,6 +314,16 @@ public class Utilidades {
             if (cmps[i] instanceof JComboBox) {
                 JComboBox tm = (JComboBox) cmps[i];
                 tm.setEnabled(habilitar);
+                tm.setEditable(habilitar);
+                if (limpiar) {
+                    tm.setSelectedIndex(0);
+                }
+                continue;
+            }
+            if (cmps[i] instanceof ComboBoxRect) {
+                ComboBoxRect tm = (ComboBoxRect) cmps[i];
+                tm.setEnabled(habilitar);
+                tm.setEditable(habilitar);
                 if (limpiar) {
                     tm.setSelectedIndex(-1);
                 }

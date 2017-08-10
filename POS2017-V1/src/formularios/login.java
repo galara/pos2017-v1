@@ -7,6 +7,7 @@ package formularios;
 
 import clases.AccesoUsuario;
 import java.awt.Color;
+import javax.swing.UIManager;
 
 /**
  *
@@ -339,10 +340,11 @@ public class login extends javax.swing.JFrame {
             //UIManager.put("nimbusBase", new Color(176,179,50));
             //UIManager.put("nimbusBlueGrey", new Color(115,164,209));
             //UIManager.put("control", new Color(176,179,50));
-            
+
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    UIManager.getLookAndFeelDefaults().put("DesktopPane[Enabled].backgroundPainter",new Color(1,188,127) );
                     break;
                 }
             }

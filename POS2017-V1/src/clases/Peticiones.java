@@ -123,6 +123,15 @@ public class Peticiones extends Datos {
         return rs;
     }
 
+    public ResultSet consultaProducto(String buscar) {
+
+        String sql = "SELECT * FROM producto "
+                + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
     public int consultaMenu(String buscar) {
 
         String sql = "SELECT * FROM menu WHERE nombre = " + buscar;
