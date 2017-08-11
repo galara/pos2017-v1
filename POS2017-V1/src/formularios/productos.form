@@ -563,6 +563,7 @@
                       <Color blue="0" green="0" red="0" type="rgb"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
+                    <Property name="name" type="java.lang.String" value="descripcion" noResource="true"/>
                     <Property name="opaque" type="boolean" value="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[120, 21]"/>
@@ -694,6 +695,7 @@
                         <Property name="wrapStyleWord" type="boolean" value="true"/>
                         <Property name="autoscrolls" type="boolean" value="false"/>
                         <Property name="enabled" type="boolean" value="false"/>
+                        <Property name="name" type="java.lang.String" value="observacion" noResource="true"/>
                       </Properties>
                     </Component>
                   </SubComponents>

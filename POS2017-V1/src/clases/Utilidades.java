@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JViewport;
@@ -155,9 +156,29 @@ public class Utilidades {
                         cm[i].setBackground(Color.white);
                         cm[i].setForeground(Color.BLACK);
                     }
-                } else if (cm[i] instanceof JComboBox) {
-                    if (((JComboBox) cm[i]).getSelectedIndex() == -1) {
+                }
+                if (cm[i] instanceof JTextArea) {
+                    if (((JTextArea) cm[i]).getText().isEmpty()) {
                         if (opcion) {
+                            cm[i].setBackground(BObligatorio);
+                            cm[i].setForeground(FObligatorio);
+                        } else {
+                            cm[i].setBackground(Color.getHSBColor(0, 155, 185));
+                            cm[i].setBackground(Color.white);
+                            cm[i].setForeground(Color.BLACK);
+                        }
+                        existen = true;
+                    } else if (!((JTextArea) cm[i]).getText().isEmpty()) {
+                        cm[i].setBackground(Color.white);
+                        cm[i].setForeground(Color.BLACK);
+                    }
+                } else if (cm[i] instanceof JComboBox) {
+
+                    if (((JComboBox) cm[i]).getSelectedIndex() == -1 || ((JComboBox) cm[i]).getSelectedIndex() == 0) {
+                       // System.out.print("--1 " + ((JComboBox) cm[i]).getSelectedIndex() + "\n");
+
+                        if (opcion) {
+                        
                             cm[i].setBackground(BObligatorio);
                             cm[i].setForeground(FObligatorio);
                         } else {
@@ -316,7 +337,7 @@ public class Utilidades {
                 tm.setEnabled(habilitar);
                 tm.setEditable(habilitar);
                 if (limpiar) {
-                    tm.setSelectedIndex(0);
+                    tm.setSelectedIndex(-1);
                 }
                 continue;
             }
@@ -367,6 +388,21 @@ public class Utilidades {
                     } else if (cmps[i] instanceof JTextField) {
                         tmp.setText(valor);
                     }
+                }
+            }
+            if (cmps[i] instanceof JTextArea) {
+                JTextArea tmp = (JTextArea) cmps[i];
+                tmp.setEditable(habilitar);
+                tmp.setEnabled(habilitar);
+                tmp.setBackground(Color.white);
+                tmp.setForeground(Color.BLACK);
+                if (limpiar) {
+                    if (cmps[i] instanceof JTextArea) {
+                        ((JTextArea) cmps[i]).setText(null);
+                    }
+//                    else if (cmps[i] instanceof JTextField) {
+//                        tmp.setText(valor);
+//                    }
                 }
             }
         }

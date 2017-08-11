@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Hashtable;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelos.Opcion;
@@ -33,7 +34,9 @@ public class productos extends javax.swing.JInternalFrame {
     String nombreId = "idproducto";
 
     public Hashtable<String, String> hashUnidad = new Hashtable<>();
+    public Hashtable<String, String> hashUnidad2 = new Hashtable<>();
     public Hashtable<String, String> hashCategoria = new Hashtable<>();
+    public Hashtable<String, String> hashCategoria2 = new Hashtable<>();
 
     DefaultTableModel model;
     Datos datos = new Datos();
@@ -61,7 +64,7 @@ public class productos extends javax.swing.JInternalFrame {
 
             /* Instaciamos un objeto de la clase Opcion para cargar el combo box
              de los proveedores  */
-            Opcion op = new Opcion("0", "Seleccione una unidad");
+            Opcion op = new Opcion("0", " ");
 
             /* Añadimos el primer elemento al combo box */
             comboUnidad.addItem(op);
@@ -74,17 +77,20 @@ public class productos extends javax.swing.JInternalFrame {
             /* Hacemos un while que mientras hallan registros en rs, sobreescrira
              al objeto de la clase opcion con los datos del objeto rs, y los añada
              al combo box */
+            int count = 0;
             while (rs.next()) {
+                count++;
                 op = new Opcion(
                         rs.getString("idUnidad"),
                         rs.getString("nombre"));
                 comboUnidad.addItem(op);
-                hashUnidad.put(rs.getString("idUnidad"), rs.getString("nombre"));
+                hashUnidad.put(rs.getString("nombre"), "" + count);
+                hashUnidad2.put(rs.getString("idUnidad"), rs.getString("nombre"));
             }
 
             /* Instaciamos un objeto de la clase Opcion para cargar el combo box
              de los servicios  */
-            Opcion op2 = new Opcion("0", "Seleccione una categoria");
+            Opcion op2 = new Opcion("0", " ");
 
             /* Añadimos el primer elemento al combo box */
             comboCategoria.addItem(op2);
@@ -97,12 +103,15 @@ public class productos extends javax.swing.JInternalFrame {
             /* Hacemos un while que mientras hallan registros en rs, sobreescrira
              al objeto de la clase opcion con los datos del objeto rs, y los añada
              al combo box */
+            int count2 = 0;
             while (rsSer.next()) {
+                count2++;
                 op2 = new Opcion(
                         rsSer.getString("idCategoria"),
                         rsSer.getString("nombre"));
                 comboCategoria.addItem(op2);
-                hashCategoria.put(rsSer.getString("idCategoria"), rsSer.getString("nombre"));
+                hashCategoria.put(rsSer.getString("nombre"), "" + count2);
+                hashCategoria2.put(rsSer.getString("idCategoria"), rsSer.getString("nombre"));
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Problema con: " + e.getMessage());
@@ -225,22 +234,12 @@ public class productos extends javax.swing.JInternalFrame {
                 txtCodigo.setText(rs.getString("codigo"));
                 txtNombre.setText(rs.getString("nombre"));
 
-                //int pr = Integer.parseInt((String) hashUnidad.get(rs.getString("idunidad")));
-                //comboUnidad.setSelectedIndex(pr);
                 comboUnidad.setEditable(true);
                 comboCategoria.setEditable(true);
-                //comboUnidad.setEnabled(true);
-                comboUnidad.setSelectedItem(hashUnidad.get(rs.getString("idunidad")));
-                //System.out.print(hashUnidad.get(rs.getString("idunidad")));
-                //comboUnidad.setSelectedIndex(rs.getInt("idunidad"));
-                //comboCategoria.setSelectedIndex(rs.getInt("Categoria_idCategoria"));
-                
-                //int pr2 = Integer.parseInt((String) hashCategoria.get(rs.getString("idunidad")));
-                //comboCategoria.setSelectedIndex(pr2);
-                
-                
-                comboCategoria.setSelectedItem(hashCategoria.get(rs.getString("Categoria_idCategoria")));
-                
+                int u = Integer.parseInt((String) hashUnidad.get(hashUnidad2.get(rs.getString("idunidad"))));
+                comboUnidad.setSelectedIndex(u);
+                int c = Integer.parseInt((String) hashCategoria.get(hashCategoria2.get(rs.getString("Categoria_idCategoria"))));
+                comboCategoria.setSelectedIndex(c);
                 txtObservacion.setText(rs.getString("observacion"));
                 dateFecha.setDate(rs.getDate("fec_reg"));
                 rbEstado.setSelected(rs.getBoolean("estado"));
@@ -305,11 +304,12 @@ public class productos extends javax.swing.JInternalFrame {
      */
     private void Guardar() {
 
-        if (Utilidades.esObligatorio(this.tbPane2, true)) {
+        if (Utilidades.esObligatorio(this.panelFormulario, true) || Utilidades.esObligatorio(this.panelFormulario1, true)) {
+
+            Utilidades.esObligatorio(this.panelFormulario1, true);
             JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         Object[] producto = {
             txtCodigo.getText(), txtNombre.getText(), /*comboUnidad.getSelectedIndex(),
             comboCategoria.getSelectedIndex()*/ Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
@@ -746,6 +746,7 @@ public class productos extends javax.swing.JInternalFrame {
             txtNombre.setHorizontalAlignment(javax.swing.JTextField.LEFT);
             txtNombre.setDisabledTextColor(new java.awt.Color(0, 0, 0));
             txtNombre.setEnabled(false);
+            txtNombre.setName("descripcion"); // NOI18N
             txtNombre.setOpaque(true);
             txtNombre.setPreferredSize(new java.awt.Dimension(120, 21));
             panelFormulario.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, 320, 25));
@@ -791,6 +792,7 @@ public class productos extends javax.swing.JInternalFrame {
             txtObservacion.setWrapStyleWord(true);
             txtObservacion.setAutoscrolls(false);
             txtObservacion.setEnabled(false);
+            txtObservacion.setName("observacion"); // NOI18N
             jScrollPane2.setViewportView(txtObservacion);
 
             panelFormulario.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 320, 40));
@@ -1010,8 +1012,6 @@ public class productos extends javax.swing.JInternalFrame {
 
     private void bnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnGuardarActionPerformed
 
-        System.out.print((( comboUnidad.getSelectedItem())));
-                
         if (editar == false) {
             Guardar();
         } else if (editar == true) {
