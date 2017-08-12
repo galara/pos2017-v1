@@ -488,7 +488,9 @@ public class Utilidades {
                  * Verifica si el texto del encabezado es mayor al texto de la
                  * columna para dejar como ancho de columna al aue sea mayor
                  */
-                if (table.getModel().getColumnName(col).length() > value.toString().length()) {
+                if (value == null) {
+                    value = table.getModel().getColumnName(col);
+                } else if (table.getModel().getColumnName(col).length() > value.toString().length()) {
                     value = table.getModel().getColumnName(col);
                 }
                 Component comp = rend.getTableCellRendererComponent(table, value, false, false, row, col);

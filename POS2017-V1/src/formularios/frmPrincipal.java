@@ -194,7 +194,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo3.png"))); // NOI18N
         jLabel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 153, 0), 1, true));
 
-        txtUsuario.setFont(new java.awt.Font("Decker", 1, 24)); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Decker", 1, 26)); // NOI18N
         txtUsuario.setForeground(new java.awt.Color(255, 153, 0));
         txtUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtUsuario.setText(AccesoUsuario.getUsuario());

@@ -129,6 +129,7 @@ public class proveedor extends javax.swing.JInternalFrame {
                 model.addRow(registro);
             }
             tableResultados.setModel(model);
+            Utilidades.ajustarAnchoColumnas(tableResultados);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         }

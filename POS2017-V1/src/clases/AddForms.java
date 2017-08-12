@@ -69,7 +69,7 @@ public class AddForms {
                     try {
                         vnt.setMaximum(true);
                         //vnt.setMaximizable(true);
-                        //vnt.setIconifiable(true);
+                        vnt.setIconifiable(true);
                         
                     } catch (PropertyVetoException ex) {
                         Logger.getLogger(AddForms.class.getName()).log(Level.SEVERE, null, ex);
