@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Hashtable;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelos.Opcion;
@@ -207,6 +206,7 @@ public class productos extends javax.swing.JInternalFrame {
                 model.addRow(registro);
             }
             tableResultados.setModel(model);
+            Utilidades.ajustarAnchoColumnas(tableResultados);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         }
@@ -233,7 +233,6 @@ public class productos extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 txtCodigo.setText(rs.getString("codigo"));
                 txtNombre.setText(rs.getString("nombre"));
-
                 comboUnidad.setEditable(true);
                 comboCategoria.setEditable(true);
                 int u = Integer.parseInt((String) hashUnidad.get(hashUnidad2.get(rs.getString("idunidad"))));
@@ -254,49 +253,6 @@ public class productos extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         }
-
-    }
-
-    /* Funcion para llenar la tabla cuando se busque un producto en especifico
-     por el código, nombre, nit  */
-    public void llenarPerfil(String nombre) {
-
-        //  try {
-        /* Limpiamos la tabla */
-        //model.setRowCount(0);
-
-        /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
-             los clientes relaciones con el valor a buscar en la base de datos. 
-            
-             - Los datos recibidos lo guardamos en el objeto ResulSet para luego
-             llenar la tabla con los registros.
-            
-         */
-        // ResultSet rs = peticiones.consultaMenu(nombre);
-        //Object[] registro = new Object[6];
-
-        /* Hacemos un while que mientras en rs hallan datos el ira agregando
-             filas a la tabla. */
-        //while (rs.next()) {
-//                registro[0] = rs.getString("idusuario");
-//                registro[1] = rs.getString("nombre");
-//                registro[2] = rs.getString("nombreusuario");
-//                //registro[3] = rs.getString("contrasenia");
-//                registro[3] = rs.getString("puesto");
-//
-//                if (rs.getString("estado").equals("1")) {
-//                    registro[4] = ("Activo");
-//                } else if (rs.getString("estado").equals("0")) {
-//                    registro[4] = ("Inactivo");
-//                }
-//                registro[5] = rs.getString("fec_reg");
-        //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
-        //model.addRow(registro);
-        //  }
-        //tableResultados.setModel(model);
-        // } catch (SQLException ex) {
-        //   JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
-        //}
     }
 
     /**
@@ -304,9 +260,15 @@ public class productos extends javax.swing.JInternalFrame {
      */
     private void Guardar() {
 
-        if (Utilidades.esObligatorio(this.panelFormulario, true) || Utilidades.esObligatorio(this.panelFormulario1, true)) {
+        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
 
             Utilidades.esObligatorio(this.panelFormulario1, true);
+            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (Utilidades.esObligatorio(this.panelFormulario1, true)) {
+
+            Utilidades.esObligatorio(this.panelFormulario, true);
             JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -319,11 +281,6 @@ public class productos extends javax.swing.JInternalFrame {
             Validar(txtExistencia.getText()), Validar(txtCosto.getText()), Validar(txtVenta.getText()),
             Validar(txtMayoreo.getText())
         };
-
-//        Object[] product = {
-//            txtCodigo.getText(), /*txtUsuario.getText(), /*txtPassword.getText(),*/
-//            txtNombre.getText(), getFecha(), peticiones.selected(rbEstado)
-//        };
 
         /* Llamamos a la funcion guardarRegistros la cual recibe como parametro
          el nombre de la tabla, los campos y los valores a insertar del producto */
@@ -354,9 +311,16 @@ public class productos extends javax.swing.JInternalFrame {
             return;
         }
 
-        if (Utilidades.esObligatorio(this.tbPane2, true)) {
-            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son"
-                    + " Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
+
+            Utilidades.esObligatorio(this.panelFormulario1, true);
+            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (Utilidades.esObligatorio(this.panelFormulario1, true)) {
+
+            Utilidades.esObligatorio(this.panelFormulario, true);
+            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -372,10 +336,6 @@ public class productos extends javax.swing.JInternalFrame {
             Validar(txtMayoreo.getText()), id
         };
 
-//        Object[] usuario = {
-//            txtCodigo.getText(), /*txtUsuario.getText(), /*txtPassword.getText(),*/
-//            txtNombre.getText(), getFecha(), peticiones.selected(rbEstado), id
-//        };
         if (peticiones.actualizarRegistroId(nombreTabla, campos, producto, nombreId)) {
             JOptionPane.showMessageDialog(rootPane, "El registro ha sido Modificado correctamente ");
             nuevo();
@@ -612,6 +572,7 @@ public class productos extends javax.swing.JInternalFrame {
         scrollpaneResultados.setBackground(new java.awt.Color(255, 255, 255));
         scrollpaneResultados.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        tableResultados.setAutoCreateRowSorter(true);
         tableResultados.setModel(model = new DefaultTableModel(null, titulos)
             {
                 @Override
@@ -834,7 +795,7 @@ public class productos extends javax.swing.JInternalFrame {
 
             labelCodigo1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
             labelCodigo1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-            labelCodigo1.setText("Ubicación");
+            labelCodigo1.setText("Ubicación*");
             labelCodigo1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
             panelFormulario1.add(labelCodigo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 150, 25));
 
@@ -889,6 +850,7 @@ public class productos extends javax.swing.JInternalFrame {
             txtCosto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
             txtCosto.setEnabled(false);
             txtCosto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+            txtCosto.setName("costo"); // NOI18N
             txtCosto.setPreferredSize(new java.awt.Dimension(80, 23));
             panelFormulario1.add(txtCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 40, 110, 25));
 
@@ -900,6 +862,7 @@ public class productos extends javax.swing.JInternalFrame {
             txtVenta.setDisabledTextColor(new java.awt.Color(0, 0, 0));
             txtVenta.setEnabled(false);
             txtVenta.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+            txtVenta.setName("venta"); // NOI18N
             txtVenta.setPreferredSize(new java.awt.Dimension(80, 23));
             panelFormulario1.add(txtVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 80, 110, 25));
 
@@ -934,6 +897,7 @@ public class productos extends javax.swing.JInternalFrame {
             txtMayoreo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
             txtMayoreo.setEnabled(false);
             txtMayoreo.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+            txtMayoreo.setName("mayoreo"); // NOI18N
             txtMayoreo.setPreferredSize(new java.awt.Dimension(80, 23));
             panelFormulario1.add(txtMayoreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 120, 110, 25));
 

@@ -175,10 +175,10 @@ public class Utilidades {
                 } else if (cm[i] instanceof JComboBox) {
 
                     if (((JComboBox) cm[i]).getSelectedIndex() == -1 || ((JComboBox) cm[i]).getSelectedIndex() == 0) {
-                       // System.out.print("--1 " + ((JComboBox) cm[i]).getSelectedIndex() + "\n");
+                        // System.out.print("--1 " + ((JComboBox) cm[i]).getSelectedIndex() + "\n");
 
                         if (opcion) {
-                        
+
                             cm[i].setBackground(BObligatorio);
                             cm[i].setForeground(FObligatorio);
                         } else {
@@ -471,19 +471,26 @@ public class Utilidades {
 //    }
     /**
      * Este metodo ajusta el tamaño de las columnas en un JTable de acuerdo al
-     * tamaño de sus registros, el registro más largo de una columna sera el que
-     * defina el ancho de las columnas (maxwidth).
+     * tamaño de sus registros , el registro más largo de una columna sera el
+     * que defina el ancho de las columnas (maxwidth) o el largo del encabezado.
      *
      * @param table
      */
     public static void ajustarAnchoColumnas(JTable table) {
         TableColumnModel columnModel = table.getColumnModel();
 
-        for (int col = 0; col < table.getColumnCount(); col++) {
+        for (int col = 1; col < table.getColumnCount(); col++) {//col = 1 para que no tome la col del id
             int maxwidth = 0;
             for (int row = 0; row < table.getRowCount(); row++) {
                 TableCellRenderer rend = table.getCellRenderer(row, col);
                 Object value = table.getValueAt(row, col);
+                /**
+                 * Verifica si el texto del encabezado es mayor al texto de la
+                 * columna para dejar como ancho de columna al aue sea mayor
+                 */
+                if (table.getModel().getColumnName(col).length() > value.toString().length()) {
+                    value = table.getModel().getColumnName(col);
+                }
                 Component comp = rend.getTableCellRendererComponent(table, value, false, false, row, col);
                 maxwidth = Math.max(comp.getPreferredSize().width, maxwidth);
             } // para fila
