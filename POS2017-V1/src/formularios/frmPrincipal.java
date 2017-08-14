@@ -86,6 +86,11 @@ public class frmPrincipal extends javax.swing.JFrame {
         bVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/sale.png"))); // NOI18N
         bVentas.setText("F1 Ventas");
         bVentas.setToolTipText("");
+        bVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bVentasActionPerformed(evt);
+            }
+        });
 
         bProductos.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/product.png"))); // NOI18N
@@ -317,6 +322,15 @@ public class frmPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_bSalirActionPerformed
+
+    private void bVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVentasActionPerformed
+        // TODO add your handling code here:
+        venta newfrm = new venta();
+        if (newfrm == null) {
+            newfrm = new venta();
+        }
+        AddForms.adminInternalFrame(panel_center, newfrm);
+    }//GEN-LAST:event_bVentasActionPerformed
 
     /**
      * @param args the command line arguments

@@ -145,6 +145,9 @@
                 <Property name="text" type="java.lang.String" value="F1 Ventas"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bVentasActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="bProductos">
               <Properties>

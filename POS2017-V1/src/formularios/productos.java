@@ -43,7 +43,7 @@ public class productos extends javax.swing.JInternalFrame {
     boolean editar = false;
 
     /**
-     * Creates new form Usuarios
+     * Creates new form Productos
      */
     public productos() {
         initComponents();
@@ -57,7 +57,7 @@ public class productos extends javax.swing.JInternalFrame {
         tableResultados.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
 
-    public void llenarcombobox() {
+    private void llenarcombobox() {
 
         try {
 
@@ -68,9 +68,9 @@ public class productos extends javax.swing.JInternalFrame {
             /* Añadimos el primer elemento al combo box */
             comboUnidad.addItem(op);
 
-            /* Llamos a la funcion getProveedor la cual nos devuelve todos los
-             proveedores que hay, esos datos los guardamos en un ResultSet para luego
-             llenar el combo box con todos los Proveedores */
+            /* Llamos a la funcion consultaUnidad la cual nos devuelve todas las
+             Unidades que hay, esos datos los guardamos en un ResultSet para luego
+             llenar el combo box con todas las Unidades */
             ResultSet rs = peticiones.consultaUnidad("");
 
             /* Hacemos un while que mientras hallan registros en rs, sobreescrira
@@ -121,7 +121,7 @@ public class productos extends javax.swing.JInternalFrame {
      * Prepara el formulario y jtable para crear un nuevo producto (Habilita y
      * limpia los campos correspondientes
      */
-    public void nuevo() {
+    private void nuevo() {
         Utilidades.setEditableTexto(this.tbPane2, true, null, true, "");
         //Utilidades.setEditableTexto(this.panelBusqueda, false, null, true, "");
         Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
@@ -170,14 +170,14 @@ public class productos extends javax.swing.JInternalFrame {
 
     /* Funcion para llenar la tabla cuando se busque un producto en especifico
      por el código, nombre, nit  */
-    public void llenarTabla(String nombre) {
+    private void llenarTabla(String nombre) {
 
         try {
             /* Limpiamos la tabla */
             model.setRowCount(0);
 
-            /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
-             los clientes relaciones con el valor a buscar en la base de datos. 
+            /* Llamamos a la funcion consultaProducto la cual nos devuelve todos 
+             los productos relaciones con el valor a buscar en la base de datos. 
             
              - Los datos recibidos lo guardamos en el objeto ResulSet para luego
              llenar la tabla con los registros.
@@ -214,12 +214,12 @@ public class productos extends javax.swing.JInternalFrame {
 
     /* Funcion para llenar la tabla cuando se busque un producto en especifico
      por el Id */
-    public void llenarFormulario(int s) {
+    private void llenarFormulario(int s) {
 
         try {
 
             /* Llamamos a la funcion consultaRegistrosId la cual nos devuelve todos 
-             los empleados relaciones con el id a buscar en la base de datos. 
+             los productos relaciones con el id a buscar en la base de datos. 
             
              - Los datos recibidos lo guardamos en el objeto ResulSet para luego
              llenar la tabla con los registros.
@@ -273,8 +273,8 @@ public class productos extends javax.swing.JInternalFrame {
             return;
         }
         Object[] producto = {
-            txtCodigo.getText(), txtNombre.getText(), /*comboUnidad.getSelectedIndex(),
-            comboCategoria.getSelectedIndex()*/ Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
+            txtCodigo.getText(), txtNombre.getText(),
+            Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
             Integer.parseInt(((Opcion) comboCategoria.getSelectedItem()).getValor()),
             txtObservacion.getText(), getFecha(),
             peticiones.selected(rbEstado), txtUbicacion.getText(), Validar(txtMinimo.getText()),
@@ -282,11 +282,9 @@ public class productos extends javax.swing.JInternalFrame {
             Validar(txtMayoreo.getText())
         };
 
-        /* Llamamos a la funcion guardarRegistros la cual recibe como parametro
+        /* Llamamos a la funcion guardarRegistrosId la cual recibe como parametro
          el nombre de la tabla, los campos y los valores a insertar del producto */
         int id = peticiones.guardarRegistrosId(nombreTabla, campos, producto);
-        //llenarPerfil(""+id);
-        //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
 
         if (id != 0) {
             JOptionPane.showMessageDialog(rootPane, "El registro ha sido Guardado correctamente ");
@@ -327,8 +325,8 @@ public class productos extends javax.swing.JInternalFrame {
         String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 
         Object[] producto = {
-            txtCodigo.getText(), txtNombre.getText(), /*comboUnidad.getSelectedIndex(),
-            comboCategoria.getSelectedIndex()*/ Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
+            txtCodigo.getText(), txtNombre.getText(),
+            Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
             Integer.parseInt(((Opcion) comboCategoria.getSelectedItem()).getValor()),
             txtObservacion.getText(), getFecha(),
             peticiones.selected(rbEstado), txtUbicacion.getText(), Validar(txtMinimo.getText()),
