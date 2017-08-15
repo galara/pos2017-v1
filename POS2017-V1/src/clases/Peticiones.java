@@ -66,6 +66,15 @@ public class Peticiones extends Datos {
         ResultSet rs = this.getRegistros(sql);
         return rs;
     }
+    
+    public ResultSet consultaNit_Clientes(String buscar) {
+
+        String sql = "SELECT * FROM clientes "
+                + "WHERE codigo='"+ buscar + "' or nit='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
 
     /* nombre de la tabla, campo id de la tabla, valor del id*/
     public ResultSet consultaRegistrosId(String tabla, String id, String nombreId) {
@@ -127,6 +136,15 @@ public class Peticiones extends Datos {
 
         String sql = "SELECT * FROM producto "
                 + "WHERE nombre LIKE  '%" + buscar + "%' or codigo='" + buscar + "'";
+
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+    
+    public ResultSet consultaCodigo_Producto(String buscar) {
+
+        String sql = "SELECT * FROM producto "
+                + "WHERE codigo='" + buscar + "'";
 
         ResultSet rs = this.getRegistros(sql);
         return rs;

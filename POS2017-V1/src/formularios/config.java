@@ -91,6 +91,7 @@ public class config extends javax.swing.JInternalFrame {
         lbUsuarios = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         panelFormulario = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -218,6 +219,11 @@ public class config extends javax.swing.JInternalFrame {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/marca.png"))); // NOI18N
         jLabel6.setText("jLabel1");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
         panelResultados.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 40, 64, -1));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/notepad.png"))); // NOI18N
@@ -244,14 +250,20 @@ public class config extends javax.swing.JInternalFrame {
         jLabel9.setFont(new java.awt.Font("Decker", 1, 11)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 102, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Reportes");
-        panelResultados.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 64, -1));
+        jLabel9.setText("Compras");
+        panelResultados.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, 64, -1));
 
         jLabel10.setFont(new java.awt.Font("Decker", 1, 11)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 102, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("Usuarios");
         panelResultados.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 64, -1));
+
+        jLabel11.setFont(new java.awt.Font("Decker", 1, 11)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Reportes");
+        panelResultados.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 64, -1));
 
         panelImage.add(panelResultados);
         panelResultados.setBounds(0, 227, 890, 140);
@@ -446,11 +458,21 @@ public class config extends javax.swing.JInternalFrame {
         lbUsuarios.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
     }//GEN-LAST:event_lbUsuariosMouseExited
 
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+        compra newfrm = new compra();
+        if (newfrm == null) {
+            newfrm = new compra();
+        }
+        AddForms.adminInternalFrame(panel_center, newfrm);
+    }//GEN-LAST:event_jLabel6MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bnCrear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;

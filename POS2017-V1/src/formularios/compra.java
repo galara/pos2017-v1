@@ -9,7 +9,6 @@ import clases.Datos;
 import clases.FormatoDecimal;
 import clases.Peticiones;
 import clases.Utilidades;
-import clases.VerificadorEntrada;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -20,16 +19,17 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author GLARA
  */
-public class venta extends javax.swing.JInternalFrame {
+public class compra extends javax.swing.JInternalFrame {
 
     /**
      * Variables para realizar las transacciones con la base de datos
      */
     String nombreTabla = "clientes";
     //String[] titulos = {"Id", "Código", "Nombre Cliente", "Dirección", "Nit", "Limite Créd"};
-    String[] titulos = {"Id", "Código", "Descripción del producto", "Precio Venta", "Cantidad", "Importe","Existencia","Descuento"};
+    String[] titulos = {"Id", "Código", "Descripción del producto", "Precio Compra", "Cantidad", "Importe", "Existencia", "Descuento"};
     String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
     String nombreId = "idClientes";
+    String valorId = "";
 
     DefaultTableModel model;
     Datos datos = new Datos();
@@ -39,16 +39,16 @@ public class venta extends javax.swing.JInternalFrame {
     /**
      * Creates new form Cliente
      */
-    public venta() {
+    public compra() {
         initComponents();
 
         /**
          * Oculta la primer columna de la tala, la que contiene el Id
          */
-        tableResultados.getColumnModel().getColumn(0).setMaxWidth(0);
-        tableResultados.getColumnModel().getColumn(0).setMinWidth(0);
-        tableResultados.getColumnModel().getColumn(0).setPreferredWidth(0);
-        Utilidades.ajustarAnchoColumnas(tableResultados);
+//        tableResultados.getColumnModel().getColumn(0).setMaxWidth(0);
+//        tableResultados.getColumnModel().getColumn(0).setMinWidth(0);
+//        tableResultados.getColumnModel().getColumn(0).setPreferredWidth(0);
+//        Utilidades.ajustarAnchoColumnas(tableResultados);
     }
 
     /**
@@ -58,10 +58,10 @@ public class venta extends javax.swing.JInternalFrame {
     public void nuevo() {
         //Utilidades.setEditableTexto(this.panelFormulario, true, null, true, "");
         //Utilidades.setEditableTexto(this.panelBusqueda, false, null, true, "");
-        Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
-        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
-        model.setRowCount(0);
-        txtBusqueda.requestFocus();
+//        Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
+//        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
+//        model.setRowCount(0);
+//        txtBusqueda.requestFocus();
     }
 
     private String Validar(String x) {
@@ -98,6 +98,87 @@ public class venta extends javax.swing.JInternalFrame {
 
         }
         return null;
+    }
+
+    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+     por el código, nombre, nit  */
+    public void buscarCliente(String nombre) {
+
+        try {
+            /* Limpiamos los campos*/
+            txtNombrecliente.setText("");
+
+            /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
+             los clientes relaciones con el valor a buscar en la base de datos. 
+            
+             - Los datos recibidos lo guardamos en el objeto ResulSet para luego
+             llenar la tabla con los registros.
+            
+             */
+            ResultSet rs = peticiones.consultaNit_Clientes(nombre);
+            Object[] registro = new Object[4];
+
+            if (rs.next()) {//verifica si esta vacio, pero desplaza el puntero al siguiente elemento
+                rs.beforeFirst();//regresa el puntero al primer registro
+                /* Hacemos un while que mientras en rs hallan datos el ira agregando filas a la tabla. */
+                while (rs.next()) {
+
+                    valorId = rs.getString("idClientes");
+                    txtNit.setText(rs.getString("nit"));
+                    txtNombrecliente.setText(rs.getString("nombre"));
+                }
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
+        }
+    }
+
+    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+     por el código, nombre, nit  */
+    public void buscarProducto_codigo(String nombre) {
+
+        try {
+            /* Limpiamos los campos*/
+            txtNombre.setText("");
+            txtUnidad.setText("");
+            txtCantidad.setText("");
+            txtPrecio.setText("");
+            txtDescuento.setText("");
+            txtImporte.setText("");
+
+            /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
+             los clientes relaciones con el valor a buscar en la base de datos. 
+            
+             - Los datos recibidos lo guardamos en el objeto ResulSet para luego
+             llenar la tabla con los registros.
+            
+             */
+            ResultSet rs = peticiones.consultaCodigo_Producto(nombre);
+            //Object[] registro = new Object[4];
+
+            if (rs.next()) {//verifica si esta vacio, pero desplaza el puntero al siguiente elemento
+                rs.beforeFirst();//regresa el puntero al primer registro
+                /* Hacemos un while que mientras en rs hallan datos el ira agregando filas a la tabla. */
+                while (rs.next()) {
+                    txtNombre.setText(rs.getString("nombre"));
+                    txtUnidad.setText(rs.getString("idunidad"));
+                    //txtCantidad.setText("");
+                    txtPrecio.setText(rs.getString("precioventa"));
+                    //txtPrecio.setText("preciomayoreo");
+                    txtExistencia.setText(rs.getString("existencia"));
+                    //txtDescuento.setText("");
+                    //txtImporte.setText("");
+                    
+                    //txtNit.setText(rs.getString("nit"));
+                    //txtNombrecliente.setText(rs.getString("nombre"));
+                }
+                txtCantidad.requestFocus();
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
+        }
     }
 
     /* Funcion para llenar la tabla cuando se busque un cliente en especifico
@@ -159,7 +240,7 @@ public class venta extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 //txtCodigo.setText(rs.getString("codigo"));
                 //txtNombre.setText(rs.getString("nombre"));
-                txtDireccion.setText(rs.getString("direccion"));
+                txtNit.setText(rs.getString("direccion"));
                 //txtCorreo.setText(rs.getString("correo"));
                 //txtNit.setText(rs.getString("nit"));
                 //txtTelefono.setText(rs.getString("telefono"));
@@ -186,9 +267,9 @@ public class venta extends javax.swing.JInternalFrame {
         }
 
         Object[] cliente = {
-            /*txtCodigo.getText(), txtNombre.getText(),*/ txtDireccion.getText(),
+            /*txtCodigo.getText(), txtNombre.getText(),*/txtNit.getText(),
             /*txtCorreo.getText(), txtNit.getText(),
-            txtTelefono.getText(), getFecha(), */Validar(txtLimitecredito.getText())/*,
+            txtTelefono.getText(), getFecha(), */ Validar(txtLimitecredito.getText())/*,
             peticiones.selected(rbEstado)*/
         };
 
@@ -226,7 +307,7 @@ public class venta extends javax.swing.JInternalFrame {
         String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 
         Object[] cliente = {
-            /*txtCodigo.getText(), txtNombre.getText(),*/ txtDireccion.getText(),
+            /*txtCodigo.getText(), txtNombre.getText(),*/txtNit.getText(),
             /*txtCorreo.getText(), txtNit.getText(),
             txtTelefono.getText(),*/ getFecha(), Validar(txtLimitecredito.getText()),
             /*peticiones.selected(rbEstado),*/ id
@@ -284,30 +365,32 @@ public class venta extends javax.swing.JInternalFrame {
         bnEstadocuenta = new javax.swing.JButton();
         bnEditar = new javax.swing.JButton();
         panelBusqueda = new javax.swing.JPanel();
-        labelBusqueda = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        txtBusqueda = new elaprendiz.gui.textField.TextField();
-        jButton1 = new javax.swing.JButton();
-        txtNombre = new elaprendiz.gui.textField.TextField();
-        txtNombre1 = new elaprendiz.gui.textField.TextField();
-        txtCosto = new javax.swing.JFormattedTextField();
-        txtCosto1 = new javax.swing.JFormattedTextField();
-        txtCosto2 = new javax.swing.JFormattedTextField();
-        labelCodigo1 = new javax.swing.JLabel();
-        labelCodigo2 = new javax.swing.JLabel();
-        labelCodigo3 = new javax.swing.JLabel();
-        labelCodigo4 = new javax.swing.JLabel();
-        labelCodigo5 = new javax.swing.JLabel();
-        labelCodigo6 = new javax.swing.JLabel();
-        txtCosto3 = new javax.swing.JFormattedTextField();
         jPanel4 = new javax.swing.JPanel();
-        txtDireccion = new elaprendiz.gui.textField.TextField();
+        txtNit = new elaprendiz.gui.textField.TextField();
         labelCorreo4 = new javax.swing.JLabel();
-        txtDireccion1 = new elaprendiz.gui.textField.TextField();
+        txtNombrecliente = new elaprendiz.gui.textField.TextField();
         jButton2 = new javax.swing.JButton();
         labelFecha = new javax.swing.JLabel();
         dateFecha = new com.toedter.calendar.JDateChooser();
         jPanel5 = new javax.swing.JPanel();
+        labelCodigo3 = new javax.swing.JLabel();
+        txtUnidad = new elaprendiz.gui.textField.TextField();
+        txtNombre = new elaprendiz.gui.textField.TextField();
+        labelCodigo2 = new javax.swing.JLabel();
+        labelCodigo4 = new javax.swing.JLabel();
+        txtCantidad = new javax.swing.JFormattedTextField();
+        txtPrecio = new javax.swing.JFormattedTextField();
+        labelCodigo5 = new javax.swing.JLabel();
+        labelCodigo1 = new javax.swing.JLabel();
+        txtDescuento = new javax.swing.JFormattedTextField();
+        labelCodigo6 = new javax.swing.JLabel();
+        txtImporte = new javax.swing.JFormattedTextField();
+        labelCodigo7 = new javax.swing.JLabel();
+        txtExistencia = new javax.swing.JFormattedTextField();
+        labelBusqueda = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtBusqueda = new elaprendiz.gui.textField.TextField();
+        jButton1 = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         scrollpaneResultados = new javax.swing.JScrollPane();
         tableResultados = new javax.swing.JTable();
@@ -437,174 +520,33 @@ public class venta extends javax.swing.JInternalFrame {
         panelBusqueda.setPreferredSize(new java.awt.Dimension(890, 82));
         panelBusqueda.setLayout(null);
 
-        labelBusqueda.setFont(new java.awt.Font("Decker", 1, 18)); // NOI18N
-        labelBusqueda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelBusqueda.setText("Código del producto:");
-        panelBusqueda.add(labelBusqueda);
-        labelBusqueda.setBounds(30, 90, 200, 27);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/product.png"))); // NOI18N
-        panelBusqueda.add(jLabel1);
-        jLabel1.setBounds(250, 90, 20, 27);
-
-        txtBusqueda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtBusqueda.setOpaque(true);
-        txtBusqueda.setPreferredSize(new java.awt.Dimension(250, 27));
-        txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBusquedaActionPerformed(evt);
-            }
-        });
-        panelBusqueda.add(txtBusqueda);
-        txtBusqueda.setBounds(240, 90, 395, 27);
-
-        jButton1.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/new.png"))); // NOI18N
-        jButton1.setText("ENTER - Agregar Producto");
-        panelBusqueda.add(jButton1);
-        jButton1.setBounds(650, 90, 200, 27);
-
-        txtNombre.setEditable(false);
-        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
-        txtNombre.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtNombre.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtNombre.setEnabled(false);
-        txtNombre.setName("descripcion"); // NOI18N
-        txtNombre.setOpaque(true);
-        txtNombre.setPreferredSize(new java.awt.Dimension(120, 21));
-        panelBusqueda.add(txtNombre);
-        txtNombre.setBounds(350, 150, 160, 25);
-
-        txtNombre1.setEditable(false);
-        txtNombre1.setBackground(new java.awt.Color(255, 255, 255));
-        txtNombre1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtNombre1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtNombre1.setEnabled(false);
-        txtNombre1.setName("descripcion"); // NOI18N
-        txtNombre1.setOpaque(true);
-        txtNombre1.setPreferredSize(new java.awt.Dimension(120, 21));
-        panelBusqueda.add(txtNombre1);
-        txtNombre1.setBounds(20, 150, 320, 25);
-
-        txtCosto.setEditable(false);
-        txtCosto.setBackground(new java.awt.Color(255, 255, 255));
-        txtCosto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtCosto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
-        txtCosto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCosto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtCosto.setEnabled(false);
-        txtCosto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtCosto.setName("costo"); // NOI18N
-        txtCosto.setPreferredSize(new java.awt.Dimension(80, 23));
-        panelBusqueda.add(txtCosto);
-        txtCosto.setBounds(700, 150, 80, 25);
-
-        txtCosto1.setEditable(false);
-        txtCosto1.setBackground(new java.awt.Color(255, 255, 255));
-        txtCosto1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtCosto1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
-        txtCosto1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCosto1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtCosto1.setEnabled(false);
-        txtCosto1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtCosto1.setName("costo"); // NOI18N
-        txtCosto1.setPreferredSize(new java.awt.Dimension(80, 23));
-        panelBusqueda.add(txtCosto1);
-        txtCosto1.setBounds(520, 150, 80, 25);
-
-        txtCosto2.setEditable(false);
-        txtCosto2.setBackground(new java.awt.Color(255, 255, 255));
-        txtCosto2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtCosto2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
-        txtCosto2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCosto2.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtCosto2.setEnabled(false);
-        txtCosto2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtCosto2.setName("costo"); // NOI18N
-        txtCosto2.setPreferredSize(new java.awt.Dimension(80, 23));
-        panelBusqueda.add(txtCosto2);
-        txtCosto2.setBounds(610, 150, 80, 25);
-
-        labelCodigo1.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo1.setText("Descuento");
-        labelCodigo1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo1);
-        labelCodigo1.setBounds(700, 130, 80, 18);
-
-        labelCodigo2.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo2.setText("Descripción del producto");
-        labelCodigo2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo2);
-        labelCodigo2.setBounds(20, 130, 320, 18);
-
-        labelCodigo3.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo3.setText("Unidad");
-        labelCodigo3.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo3);
-        labelCodigo3.setBounds(350, 130, 160, 18);
-
-        labelCodigo4.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo4.setText("Cantidad");
-        labelCodigo4.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo4);
-        labelCodigo4.setBounds(520, 130, 80, 18);
-
-        labelCodigo5.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo5.setText("Precio");
-        labelCodigo5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo5);
-        labelCodigo5.setBounds(610, 130, 80, 18);
-
-        labelCodigo6.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
-        labelCodigo6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelCodigo6.setText("Importe");
-        labelCodigo6.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panelBusqueda.add(labelCodigo6);
-        labelCodigo6.setBounds(790, 130, 80, 18);
-
-        txtCosto3.setEditable(false);
-        txtCosto3.setBackground(new java.awt.Color(255, 255, 255));
-        txtCosto3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtCosto3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
-        txtCosto3.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCosto3.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtCosto3.setEnabled(false);
-        txtCosto3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtCosto3.setName("costo"); // NOI18N
-        txtCosto3.setPreferredSize(new java.awt.Dimension(80, 23));
-        panelBusqueda.add(txtCosto3);
-        txtCosto3.setBounds(790, 150, 80, 25);
-
         jPanel4.setBorder(new javax.swing.border.LineBorder(java.awt.SystemColor.textHighlight, 1, true));
         jPanel4.setOpaque(false);
 
-        txtDireccion.setEditable(false);
-        txtDireccion.setBackground(new java.awt.Color(255, 255, 255));
-        txtDireccion.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtDireccion.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtDireccion.setEnabled(false);
-        txtDireccion.setName("txtDireccion"); // NOI18N
-        txtDireccion.setOpaque(true);
-        txtDireccion.setPreferredSize(new java.awt.Dimension(120, 21));
+        txtNit.setBackground(new java.awt.Color(255, 255, 255));
+        txtNit.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtNit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtNit.setName("txtNit"); // NOI18N
+        txtNit.setOpaque(true);
+        txtNit.setPreferredSize(new java.awt.Dimension(120, 21));
+        txtNit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNitActionPerformed(evt);
+            }
+        });
 
         labelCorreo4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         labelCorreo4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelCorreo4.setText("Cliente:");
         labelCorreo4.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-        txtDireccion1.setEditable(false);
-        txtDireccion1.setBackground(new java.awt.Color(255, 255, 255));
-        txtDireccion1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtDireccion1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtDireccion1.setEnabled(false);
-        txtDireccion1.setName("txtDireccion"); // NOI18N
-        txtDireccion1.setOpaque(true);
-        txtDireccion1.setPreferredSize(new java.awt.Dimension(120, 21));
+        txtNombrecliente.setEditable(false);
+        txtNombrecliente.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombrecliente.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtNombrecliente.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtNombrecliente.setName("txtDireccion"); // NOI18N
+        txtNombrecliente.setOpaque(true);
+        txtNombrecliente.setPreferredSize(new java.awt.Dimension(120, 21));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/search16.png"))); // NOI18N
 
@@ -615,7 +557,6 @@ public class venta extends javax.swing.JInternalFrame {
 
         dateFecha.setDate(Calendar.getInstance().getTime());
         dateFecha.setDateFormatString("dd/MM/yyyy");
-        dateFecha.setEnabled(false);
         dateFecha.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         dateFecha.setIcon(null);
         dateFecha.setMaxSelectableDate(new java.util.Date(3093496470100000L));
@@ -630,11 +571,11 @@ public class venta extends javax.swing.JInternalFrame {
                 .addGap(19, 19, 19)
                 .addComponent(labelCorreo4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(txtDireccion1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNombrecliente, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -648,12 +589,12 @@ public class venta extends javax.swing.JInternalFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtDireccion1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtNombrecliente, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelCorreo4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2)))
+                        .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelCorreo4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -663,15 +604,221 @@ public class venta extends javax.swing.JInternalFrame {
         jPanel5.setBorder(new javax.swing.border.LineBorder(java.awt.SystemColor.textHighlight, 1, true));
         jPanel5.setOpaque(false);
 
+        labelCodigo3.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo3.setText("Unidad");
+        labelCodigo3.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        txtUnidad.setEditable(false);
+        txtUnidad.setBackground(new java.awt.Color(255, 255, 255));
+        txtUnidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtUnidad.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtUnidad.setEnabled(false);
+        txtUnidad.setName("descripcion"); // NOI18N
+        txtUnidad.setOpaque(true);
+        txtUnidad.setPreferredSize(new java.awt.Dimension(120, 21));
+
+        txtNombre.setEditable(false);
+        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombre.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtNombre.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtNombre.setEnabled(false);
+        txtNombre.setName("descripcion"); // NOI18N
+        txtNombre.setOpaque(true);
+        txtNombre.setPreferredSize(new java.awt.Dimension(120, 21));
+
+        labelCodigo2.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo2.setText("Descripción del producto");
+        labelCodigo2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        labelCodigo4.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo4.setText("Cantidad");
+        labelCodigo4.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        txtCantidad.setBackground(new java.awt.Color(255, 255, 255));
+        txtCantidad.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtCantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtCantidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCantidad.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtCantidad.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtCantidad.setName("costo"); // NOI18N
+        txtCantidad.setPreferredSize(new java.awt.Dimension(80, 23));
+        txtCantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCantidadActionPerformed(evt);
+            }
+        });
+
+        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecio.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtPrecio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPrecio.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtPrecio.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtPrecio.setName("costo"); // NOI18N
+        txtPrecio.setPreferredSize(new java.awt.Dimension(70, 23));
+
+        labelCodigo5.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo5.setText("Precio");
+        labelCodigo5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        labelCodigo1.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo1.setText("Descuento");
+        labelCodigo1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        txtDescuento.setBackground(new java.awt.Color(255, 255, 255));
+        txtDescuento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtDescuento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtDescuento.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDescuento.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtDescuento.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtDescuento.setName("costo"); // NOI18N
+        txtDescuento.setPreferredSize(new java.awt.Dimension(70, 23));
+
+        labelCodigo6.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo6.setText("Importe");
+        labelCodigo6.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        txtImporte.setEditable(false);
+        txtImporte.setBackground(new java.awt.Color(255, 255, 255));
+        txtImporte.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtImporte.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtImporte.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtImporte.setEnabled(false);
+        txtImporte.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtImporte.setName("costo"); // NOI18N
+        txtImporte.setPreferredSize(new java.awt.Dimension(70, 23));
+
+        labelCodigo7.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
+        labelCodigo7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCodigo7.setText("Existencia");
+        labelCodigo7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        txtExistencia.setEditable(false);
+        txtExistencia.setBackground(new java.awt.Color(255, 255, 255));
+        txtExistencia.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtExistencia.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtExistencia.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtExistencia.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtExistencia.setEnabled(false);
+        txtExistencia.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtExistencia.setName("costo"); // NOI18N
+        txtExistencia.setPreferredSize(new java.awt.Dimension(80, 23));
+
+        labelBusqueda.setFont(new java.awt.Font("Decker", 1, 18)); // NOI18N
+        labelBusqueda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelBusqueda.setText("Código del producto:");
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/product.png"))); // NOI18N
+
+        txtBusqueda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtBusqueda.setOpaque(true);
+        txtBusqueda.setPreferredSize(new java.awt.Dimension(250, 27));
+        txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBusquedaActionPerformed(evt);
+            }
+        });
+
+        jButton1.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/new.png"))); // NOI18N
+        jButton1.setText("ENTER - Agregar Producto");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 868, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCodigo2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCodigo3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUnidad, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCodigo4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCodigo7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelCodigo5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCodigo1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtImporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelCodigo6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(labelBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 108, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(labelCodigo7)
+                        .addGap(2, 2, 2)
+                        .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelCodigo6)
+                            .addComponent(labelCodigo1))
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(labelCodigo5)
+                        .addGap(2, 2, 2)
+                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(labelCodigo4)
+                            .addGap(2, 2, 2)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(labelCodigo2)
+                            .addGap(2, 2, 2)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(labelCodigo3)
+                            .addGap(2, 2, 2)
+                            .addComponent(txtUnidad, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
 
         panelBusqueda.add(jPanel5);
@@ -810,7 +957,7 @@ public class venta extends javax.swing.JInternalFrame {
 
             labelEncabezado.setFont(new java.awt.Font("Decker", 1, 17)); // NOI18N
             labelEncabezado.setForeground(new java.awt.Color(255, 255, 255));
-            labelEncabezado.setText("VENTA");
+            labelEncabezado.setText("COMPRA");
 
             javax.swing.GroupLayout panelEncabezadoLayout = new javax.swing.GroupLayout(panelEncabezado);
             panelEncabezado.setLayout(panelEncabezadoLayout);
@@ -941,9 +1088,9 @@ public class venta extends javax.swing.JInternalFrame {
 
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
-        llenarTabla(txtBusqueda.getText());
+        buscarProducto_codigo(txtBusqueda.getText());
         //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
-        Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
+        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
 
     }//GEN-LAST:event_txtBusquedaActionPerformed
 
@@ -970,6 +1117,17 @@ public class venta extends javax.swing.JInternalFrame {
         Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
         editar = true;
     }//GEN-LAST:event_bnEditarActionPerformed
+
+    private void txtNitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNitActionPerformed
+        // TODO add your handling code here:
+        buscarCliente(txtNit.getText());
+    }//GEN-LAST:event_txtNitActionPerformed
+
+    private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
+        // TODO add your handling code here:
+        txtDescuento.requestFocus();
+        txtImporte.setText(""+Double.parseDouble(txtCantidad.getText()) * Double.parseDouble(txtPrecio.getText()));
+    }//GEN-LAST:event_txtCantidadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -998,6 +1156,7 @@ public class venta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelCodigo4;
     private javax.swing.JLabel labelCodigo5;
     private javax.swing.JLabel labelCodigo6;
+    private javax.swing.JLabel labelCodigo7;
     private javax.swing.JLabel labelCorreo3;
     private javax.swing.JLabel labelCorreo4;
     private javax.swing.JLabel labelEncabezado;
@@ -1013,14 +1172,15 @@ public class venta extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane scrollpaneResultados;
     private javax.swing.JTable tableResultados;
     private elaprendiz.gui.textField.TextField txtBusqueda;
-    private javax.swing.JFormattedTextField txtCosto;
-    private javax.swing.JFormattedTextField txtCosto1;
-    private javax.swing.JFormattedTextField txtCosto2;
-    private javax.swing.JFormattedTextField txtCosto3;
-    private elaprendiz.gui.textField.TextField txtDireccion;
-    private elaprendiz.gui.textField.TextField txtDireccion1;
+    private javax.swing.JFormattedTextField txtCantidad;
+    private javax.swing.JFormattedTextField txtDescuento;
+    private javax.swing.JFormattedTextField txtExistencia;
+    private javax.swing.JFormattedTextField txtImporte;
     private javax.swing.JFormattedTextField txtLimitecredito;
+    private elaprendiz.gui.textField.TextField txtNit;
     private elaprendiz.gui.textField.TextField txtNombre;
-    private elaprendiz.gui.textField.TextField txtNombre1;
+    private elaprendiz.gui.textField.TextField txtNombrecliente;
+    private javax.swing.JFormattedTextField txtPrecio;
+    private elaprendiz.gui.textField.TextField txtUnidad;
     // End of variables declaration//GEN-END:variables
 }
