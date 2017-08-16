@@ -143,8 +143,8 @@ public class Peticiones extends Datos {
     
     public ResultSet consultaCodigo_Producto(String buscar) {
 
-        String sql = "SELECT * FROM producto "
-                + "WHERE codigo='" + buscar + "'";
+        String sql = "SELECT * FROM unidad INNER JOIN producto "
+                + "ON unidad.idunidad = producto.idunidad WHERE producto.codigo='" + buscar + "'";
 
         ResultSet rs = this.getRegistros(sql);
         return rs;
