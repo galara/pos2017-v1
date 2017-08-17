@@ -325,9 +325,9 @@ public class frmPrincipal extends javax.swing.JFrame {
 
     private void bVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVentasActionPerformed
         // TODO add your handling code here:
-        venta newfrm = new venta();
+        compra newfrm = new compra();
         if (newfrm == null) {
-            newfrm = new venta();
+            newfrm = new compra();
         }
         AddForms.adminInternalFrame(panel_center, newfrm);
     }//GEN-LAST:event_bVentasActionPerformed
