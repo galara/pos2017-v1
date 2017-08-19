@@ -34,7 +34,7 @@ public class compra extends javax.swing.JInternalFrame {
      */
     String nombreTabla = "clientes";
     //String[] titulos = {"Id", "Código", "Nombre Cliente", "Dirección", "Nit", "Limite Créd"};
-    String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio Normal", "Precio C.Descuento", "Descuento %", "Subtotal"};
+    String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio Normal", "Precio C.Descuento", "Descuento %", "Subtotal", "Precio Costo"};
     String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
     String nombreId = "idClientes";
     String valorId = "";
@@ -233,27 +233,8 @@ public class compra extends javax.swing.JInternalFrame {
 
     public void calcularPrecio() {
 
-        /* Variable que contendra el ID de la fila seleccionada */
-        //int s = 0;
+        Float preciocondescuento, desc, dif;
 
-        /* Guardamos el ID de dla fila selecciona en la variable s*/
-        //s = tableResultados.getSelectedRow();
-
-        /* Validamos que hallan seleccionado */
-//        if (s < 0) {
-//            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
-//            return;
-//        }
-//        float cantidad = Float.parseFloat(Validar(txtNuevacant.getText()));
-//        cantidad = (float) (Math.round((cantidad) * 100.0) / 100.0);
-        Float precd, desc, dif;
-
-        //desc = (float) (Math.round((Float.parseFloat(txtDescuento.getText()) / 100) * 100.0) / 100.0);
-        //dif = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) * desc) * 100.0) / 100.0);
-        //precd = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) - dif) * 100.0) / 100.0);
-        //subtotal = (Float.parseFloat(txtCantidad.getText()) * precd);
-        //subtotal = (float) (Math.round(((Float.parseFloat(txtCantidad.getText()) * precd)) * 100.0) / 100.0);
-        //txtPreciocondescuento.setText("" + precd);
         float precionormal = Float.parseFloat(Validar(JDprecioNormal.getText()));
         precionormal = (float) (Math.round((precionormal) * 100.0) / 100.0);
 
@@ -262,22 +243,45 @@ public class compra extends javax.swing.JInternalFrame {
 
         desc = (float) (Math.round((descuento / 100) * 100.0) / 100.0);
         dif = (float) (Math.round((precionormal * desc) * 100.0) / 100.0);
-        precd = (float) (Math.round((precionormal - dif) * 100.0) / 100.0);
+        preciocondescuento = (float) (Math.round((precionormal - dif) * 100.0) / 100.0);
 
-        //float nprecios = Float.parseFloat(Validar(JDNuevoprecio.getText()));
-        //nprecios = (float) (Math.round((nprecios) * 100.0) / 100.0);
-//        float Porcentaje = Float.parseFloat(Validar(JDdescuento.getText()));
-//        Porcentaje = (float) (Math.round((Porcentaje) * 100.0) / 100.0);
-        //float subtotal;
-        //subtotal = (float) (Math.round((cantidad * nprecios) * 100.0) / 100.0);
-        if ((precd > 0)) {
-            JDnuevoPrecio.setValue(precd);
-//            model.setValueAt(cantidad, s, 3);
-//            model.setValueAt(nprecios, s, 6);
-//            model.setValueAt(subtotal, s, 8);
+//        float costo = Float.parseFloat(Validar(JDcosto.getText()));
+//        costo = (float) (Math.round((costo) * 100.0) / 100.0);
+        // if (preciocondescuento >= costo) {
+        if ((preciocondescuento > 0 && preciocondescuento <= precionormal)) {
+            JDnuevoPrecio.setValue(preciocondescuento);
+        } else {
+            JDnuevoPrecio.setValue(0.00);
         }
-//        sumar_total();
-//        cambiar_cantidad.dispose();
+//        } else {
+//            JOptionPane.showInternalMessageDialog(this, "El nuevo precio es menor al costo", "Error", JOptionPane.INFORMATION_MESSAGE);
+//        }
+    }
+
+    public void calcularDescuento() {
+
+        Float desc, dif;
+
+        float precionormal = Float.parseFloat(Validar(JDprecioNormal.getText()));
+        precionormal = (float) (Math.round((precionormal) * 100.0) / 100.0);
+
+        float nuevoprecio = Float.parseFloat(Validar(JDnuevoPrecio.getText()));
+        nuevoprecio = (float) (Math.round((nuevoprecio) * 100.0) / 100.0);
+
+//        float costo = Float.parseFloat(Validar(JDcosto.getText()));
+//        costo = (float) (Math.round((costo) * 100.0) / 100.0);
+        //if (nuevoprecio >= costo) {
+        dif = (float) (Math.round((precionormal - nuevoprecio) * 100.0) / 100.0);
+        desc = (float) (Math.round(((dif / precionormal) * 100) * 100.0) / 100.0);
+
+        if ((desc >= 0 && nuevoprecio <= precionormal)) {
+            JDdescuento.setValue(desc);
+        } else {
+            JDdescuento.setValue(0.00);
+        }
+//        } else {
+//            JOptionPane.showInternalMessageDialog(this, "El nuevo precio es menor al costo", "Error", JOptionPane.INFORMATION_MESSAGE);
+//        }
     }
 
     /* Funcion para llenar la tabla cuando se busque un cliente en especifico
@@ -355,7 +359,7 @@ public class compra extends javax.swing.JInternalFrame {
                     txtPrecio.setValue(rs.getFloat("producto.precioventa"));
                     //txtPrecio.setText("preciomayoreo");
                     txtExistencia.setValue(rs.getFloat("producto.existencia"));
-                    //txtDescuento.setText("");
+                    txtCosto.setValue(rs.getFloat("producto.preciocoste"));
                     //txtImporte.setText("");
 
                     //txtNit.setText(rs.getString("nit"));
@@ -385,7 +389,7 @@ public class compra extends javax.swing.JInternalFrame {
             
          */
         //ResultSet rs = peticiones.consultaClientes(nombre);
-        Object[] registro = new Object[9];
+        Object[] registro = new Object[10];
 
         /* Hacemos un while que mientras en rs hallan datos el ira agregando
              filas a la tabla. */
@@ -399,6 +403,8 @@ public class compra extends javax.swing.JInternalFrame {
         registro[6] = Float.parseFloat(txtPreciocondescuento.getText());
         registro[7] = Float.parseFloat(txtDescuento.getText());
         registro[8] = Float.parseFloat(txtImporte.getText());
+        registro[9] = Float.parseFloat(txtCosto.getText());
+
         //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
         model.addRow(registro);
         // }
@@ -415,6 +421,7 @@ public class compra extends javax.swing.JInternalFrame {
         txtPrecio.setValue(null);
         txtDescuento.setValue(null);
         txtImporte.setValue(null);
+        txtCosto.setValue(null);
         txtExistencia.setValue(null);
         txtBusqueda.requestFocus();
 
@@ -609,6 +616,7 @@ public class compra extends javax.swing.JInternalFrame {
         jLabel18 = new javax.swing.JLabel();
         JDprecioNormal = new javax.swing.JFormattedTextField();
         JDcantidad = new javax.swing.JFormattedTextField();
+        JDcosto = new javax.swing.JFormattedTextField();
         jPanel9 = new javax.swing.JPanel();
         JBCambiarPrecio = new javax.swing.JButton();
         JBCancelarPrecio = new javax.swing.JButton();
@@ -627,6 +635,7 @@ public class compra extends javax.swing.JInternalFrame {
         cambiarPrecio = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         cambiarCantidad = new javax.swing.JMenuItem();
+        jDialog1 = new javax.swing.JDialog();
         panelImage = new elaprendiz.gui.panel.PanelImage();
         panelBotones = new javax.swing.JPanel();
         bnBuscar = new javax.swing.JButton();
@@ -663,6 +672,7 @@ public class compra extends javax.swing.JInternalFrame {
         txtBusqueda = new elaprendiz.gui.textField.TextField();
         txtCodigo = new elaprendiz.gui.textField.TextField();
         txtPreciocondescuento = new javax.swing.JFormattedTextField();
+        txtCosto = new javax.swing.JFormattedTextField();
         panelResultados = new javax.swing.JPanel();
         scrollpaneResultados = new javax.swing.JScrollPane();
         tableResultados = new javax.swing.JTable();
@@ -682,7 +692,6 @@ public class compra extends javax.swing.JInternalFrame {
 
         cambiar_precio.setBackground(java.awt.Color.white);
         cambiar_precio.setMinimumSize(new java.awt.Dimension(225, 174));
-        cambiar_precio.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         cambiar_precio.setUndecorated(true);
         cambiar_precio.setResizable(false);
         cambiar_precio.setType(java.awt.Window.Type.UTILITY);
@@ -707,6 +716,11 @@ public class compra extends javax.swing.JInternalFrame {
         JDnuevoPrecio.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         JDnuevoPrecio.setName("costo"); // NOI18N
         JDnuevoPrecio.setPreferredSize(new java.awt.Dimension(70, 23));
+        JDnuevoPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                JDnuevoPrecioKeyReleased(evt);
+            }
+        });
 
         JDdescuento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         JDdescuento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
@@ -745,14 +759,23 @@ public class compra extends javax.swing.JInternalFrame {
         JDcantidad.setName("costo"); // NOI18N
         JDcantidad.setPreferredSize(new java.awt.Dimension(70, 23));
 
+        JDcosto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        JDcosto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        JDcosto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        JDcosto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        JDcosto.setFocusable(false);
+        JDcosto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        JDcosto.setName("costo"); // NOI18N
+        JDcosto.setPreferredSize(new java.awt.Dimension(70, 23));
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(7, 7, 7)
+                .addGap(1, 1, 1)
                 .addComponent(JDcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -769,6 +792,8 @@ public class compra extends javax.swing.JInternalFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(JDdescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(JDprecioNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JDcosto, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -787,15 +812,14 @@ public class compra extends javax.swing.JInternalFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JDdescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JDcosto, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(JDcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(12, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(JDcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
         );
 
         JDcantidad.setVisible(false);
+        JDcosto.setVisible(false);
 
         jPanel9.setBackground(new java.awt.Color(204, 204, 204));
         jPanel9.setBorder(new javax.swing.border.LineBorder(java.awt.SystemColor.textHighlight, 2, true));
@@ -983,6 +1007,17 @@ public class compra extends javax.swing.JInternalFrame {
             }
         });
         popupCambiar.add(cambiarCantidad);
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setBackground(new java.awt.Color(255, 255, 255));
         setName("venta"); // NOI18N
@@ -1302,7 +1337,7 @@ public class compra extends javax.swing.JInternalFrame {
         txtImporte.setName("costo"); // NOI18N
         txtImporte.setPreferredSize(new java.awt.Dimension(70, 23));
         jPanel5.add(txtImporte);
-        txtImporte.setBounds(10, 80, 10, 10);
+        txtImporte.setBounds(40, 80, 10, 10);
         txtImporte.setVisible(false);
 
         txtExistencia.setEditable(false);
@@ -1366,7 +1401,7 @@ public class compra extends javax.swing.JInternalFrame {
             }
         });
         jPanel5.add(txtCodigo);
-        txtCodigo.setBounds(2, 33, 15, 14);
+        txtCodigo.setBounds(10, 40, 15, 14);
         txtCodigo.setVisible(false);
 
         txtPreciocondescuento.setEditable(false);
@@ -1381,6 +1416,20 @@ public class compra extends javax.swing.JInternalFrame {
         jPanel5.add(txtPreciocondescuento);
         txtPreciocondescuento.setBounds(10, 60, 10, 10);
         txtPreciocondescuento.setVisible(false);
+
+        txtCosto.setEditable(false);
+        txtCosto.setBackground(new java.awt.Color(255, 255, 255));
+        txtCosto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        txtCosto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+        txtCosto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCosto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtCosto.setEnabled(false);
+        txtCosto.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtCosto.setName("costo"); // NOI18N
+        txtCosto.setPreferredSize(new java.awt.Dimension(70, 23));
+        jPanel5.add(txtCosto);
+        txtCosto.setBounds(10, 80, 10, 10);
+        txtCosto.setVisible(false);
 
         panelBusqueda.add(jPanel5);
         jPanel5.setBounds(10, 80, 870, 110);
@@ -1751,11 +1800,35 @@ public class compra extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        panel_center.add(cambiar_precio);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void JBCambiarPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCambiarPrecioActionPerformed
         // TODO add your handling code here:
-        cambiarPrecio();
+        Float desc, dif;
+
+        float precionormal = Float.parseFloat(Validar(JDprecioNormal.getText()));
+        precionormal = (float) (Math.round((precionormal) * 100.0) / 100.0);
+
+        float preciocondescuento = Float.parseFloat(Validar(JDnuevoPrecio.getText()));
+        preciocondescuento = (float) (Math.round((preciocondescuento) * 100.0) / 100.0);
+
+//        desc = (float) (Math.round((descuento / 100) * 100.0) / 100.0);
+//        dif = (float) (Math.round((precionormal * desc) * 100.0) / 100.0);
+//        preciocondescuento = (float) (Math.round((precionormal - dif) * 100.0) / 100.0);
+        float costo = Float.parseFloat(Validar(JDcosto.getText()));
+        costo = (float) (Math.round((costo) * 100.0) / 100.0);
+
+        if (preciocondescuento < costo) {
+            int resp;
+            resp = JOptionPane.showInternalConfirmDialog(this, "El nuevo precio es menor al costo, desea realizar en cambio", "Pregunta", 0);
+            if (resp == 0) {
+                cambiarPrecio();
+            }
+        } else if (preciocondescuento >= costo) {
+            cambiarPrecio();
+        }
+
     }//GEN-LAST:event_JBCambiarPrecioActionPerformed
 
     private void JBCancelarPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCancelarPrecioActionPerformed
@@ -1788,6 +1861,7 @@ public class compra extends javax.swing.JInternalFrame {
         JDnuevoPrecio.setValue(null);
         JDdescuento.setValue(null);
         JDcantidad.setValue(null);
+        JDcosto.setValue(null);
 
         int s = 0;
 
@@ -1803,6 +1877,7 @@ public class compra extends javax.swing.JInternalFrame {
             JDnuevoPrecio.setValue(Float.parseFloat(Validar(tableResultados.getValueAt(s, 6).toString())));
             JDdescuento.setValue(Float.parseFloat(Validar(tableResultados.getValueAt(s, 7).toString())));
             JDcantidad.setValue(Float.parseFloat(Validar(tableResultados.getValueAt(s, 3).toString())));
+            JDcosto.setValue(Float.parseFloat(Validar(tableResultados.getValueAt(s, 9).toString())));
 
             Dimension pantalla = panel_center.getSize();
             //obtenemos el tamaño de la ventana
@@ -1878,6 +1953,11 @@ public class compra extends javax.swing.JInternalFrame {
         calcularPrecio();
     }//GEN-LAST:event_JDdescuentoKeyReleased
 
+    private void JDnuevoPrecioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_JDnuevoPrecioKeyReleased
+        // TODO add your handling code here:
+        calcularDescuento();
+    }//GEN-LAST:event_JDnuevoPrecioKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField DPcantidadactual;
@@ -1887,6 +1967,7 @@ public class compra extends javax.swing.JInternalFrame {
     private javax.swing.JButton JBCancelarPrecio;
     private javax.swing.JFormattedTextField JDNuevoprecio;
     private javax.swing.JFormattedTextField JDcantidad;
+    private javax.swing.JFormattedTextField JDcosto;
     private javax.swing.JFormattedTextField JDdescuento;
     private javax.swing.JFormattedTextField JDnuevoPrecio;
     private javax.swing.JFormattedTextField JDprecioNormal;
@@ -1906,6 +1987,7 @@ public class compra extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -1950,6 +2032,7 @@ public class compra extends javax.swing.JInternalFrame {
     private elaprendiz.gui.textField.TextField txtBusqueda;
     private javax.swing.JFormattedTextField txtCantidad;
     private elaprendiz.gui.textField.TextField txtCodigo;
+    private javax.swing.JFormattedTextField txtCosto;
     private javax.swing.JFormattedTextField txtDescuento;
     private javax.swing.JFormattedTextField txtExistencia;
     private javax.swing.JFormattedTextField txtImporte;
