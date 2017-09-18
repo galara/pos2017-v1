@@ -499,7 +499,8 @@ public class Utilidades {
             TableColumn column = columnModel.getColumn(col);
             column.setPreferredWidth(maxwidth);
         } // para columnas 
-        table.setAutoCreateRowSorter(true);//para ordenar el Jtable al dar clic encima del titulo de la columna
+        table.setAutoCreateRowSorter(false);//para ordenar el Jtable al dar clic encima del titulo de la columna
+        table.getTableHeader().setReorderingAllowed(false) ;
     }
 
     public static String objectToString(Object Obj) {

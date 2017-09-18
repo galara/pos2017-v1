@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import static formularios.buscar_cliente.Comprueba;
 
 /**
  *
@@ -34,10 +35,10 @@ public class compra extends javax.swing.JInternalFrame {
      */
     String nombreTabla = "clientes";
     //String[] titulos = {"Id", "Código", "Nombre Cliente", "Dirección", "Nit", "Limite Créd"};
-    String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio Normal", "Precio C.Descuento", "Descuento %", "Subtotal", "Precio Costo"};
+    String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio.Norm", "Precio C.Desc", "Descuento %", "Subtotal", "Precio Costo"};
     String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
     String nombreId = "idClientes";
-    String valorId = "";
+    public static String valorId = "";
 
     DefaultTableModel model;
     Datos datos = new Datos();
@@ -311,8 +312,8 @@ public class compra extends javax.swing.JInternalFrame {
                     txtNit.setText(rs.getString("nit"));
                     txtNombrecliente.setText(rs.getString("nombre"));
                 }
-                txtBusqueda.requestFocus();
-                txtBusqueda.setEditable(true);
+                txtBusquedap.requestFocus();
+                txtBusquedap.setEditable(true);
             }
 
         } catch (SQLException ex) {
@@ -413,7 +414,7 @@ public class compra extends javax.swing.JInternalFrame {
         sumar_total();
 
         txIdproducto.setText("");
-        txtBusqueda.setText("");
+        txtBusquedap.setText("");
         txtCodigo.setText("");
         txtNombre.setText("");
         txtUnidad.setText("");
@@ -423,7 +424,7 @@ public class compra extends javax.swing.JInternalFrame {
         txtImporte.setValue(null);
         txtCosto.setValue(null);
         txtExistencia.setValue(null);
-        txtBusqueda.requestFocus();
+        txtBusquedap.requestFocus();
 
         //} 
 //        catch (SQLException ex) {
@@ -586,7 +587,7 @@ public class compra extends javax.swing.JInternalFrame {
 
         /* Guardamos el ID de dla fila selecciona en la variable s*/
         s = tableResultados.getSelectedRow();
-
+        System.out.print("selected -"+tableResultados.getValueAt(s, 1).toString()+"\n");
         /* Validamos que hallan seleccionado */
         if (s < 0) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
@@ -669,7 +670,7 @@ public class compra extends javax.swing.JInternalFrame {
         txtExistencia = new javax.swing.JFormattedTextField();
         labelBusqueda = new javax.swing.JLabel();
         txIdproducto = new elaprendiz.gui.textField.TextField();
-        txtBusqueda = new elaprendiz.gui.textField.TextField();
+        txtBusquedap = new elaprendiz.gui.textField.TextField();
         txtCodigo = new elaprendiz.gui.textField.TextField();
         txtPreciocondescuento = new javax.swing.JFormattedTextField();
         txtCosto = new javax.swing.JFormattedTextField();
@@ -1096,7 +1097,7 @@ public class compra extends javax.swing.JInternalFrame {
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bnCrear)
+                .addComponent(bnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bnBuscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1194,22 +1195,23 @@ public class compra extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtNombrecliente, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(dateFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelCorreo4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNombrecliente, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dateFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNit, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCorreo4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -1375,17 +1377,17 @@ public class compra extends javax.swing.JInternalFrame {
         txIdproducto.setBounds(2, 12, 15, 14);
         txIdproducto.setVisible(false);
 
-        txtBusqueda.setEditable(false);
-        txtBusqueda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtBusqueda.setOpaque(true);
-        txtBusqueda.setPreferredSize(new java.awt.Dimension(250, 27));
-        txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
+        txtBusquedap.setEditable(false);
+        txtBusquedap.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtBusquedap.setOpaque(true);
+        txtBusquedap.setPreferredSize(new java.awt.Dimension(250, 27));
+        txtBusquedap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBusquedaActionPerformed(evt);
+                txtBusquedapActionPerformed(evt);
             }
         });
-        jPanel5.add(txtBusqueda);
-        txtBusqueda.setBounds(110, 14, 290, 27);
+        jPanel5.add(txtBusquedap);
+        txtBusquedap.setBounds(110, 14, 290, 27);
 
         txtCodigo.setEditable(false);
         txtCodigo.setBackground(new java.awt.Color(255, 255, 255));
@@ -1458,8 +1460,10 @@ public class compra extends javax.swing.JInternalFrame {
             tableResultados.setComponentPopupMenu(popupCambiar);
             tableResultados.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             tableResultados.setFocusCycleRoot(true);
+            tableResultados.setName("detalle_compra"); // NOI18N
             tableResultados.setRowHeight(24);
             tableResultados.setSurrendersFocusOnKeystroke(true);
+            tableResultados.setUpdateSelectionOnSort(false);
             tableResultados.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     tableResultadosMouseClicked(evt);
@@ -1643,7 +1647,7 @@ public class compra extends javax.swing.JInternalFrame {
         Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
         Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
         model.setRowCount(0);
-        txtBusqueda.requestFocus();
+        txtBusquedap.requestFocus();
     }//GEN-LAST:event_bnBuscarActionPerformed
 
     private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
@@ -1707,13 +1711,13 @@ public class compra extends javax.swing.JInternalFrame {
         //model.setRowCount(0);
     }//GEN-LAST:event_bnCancelarActionPerformed
 
-    private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
+    private void txtBusquedapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedapActionPerformed
         // TODO add your handling code here:
-        buscarProducto_codigo(txtBusqueda.getText());
+        buscarProducto_codigo(txtBusquedap.getText());
         //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
         //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
 
-    }//GEN-LAST:event_txtBusquedaActionPerformed
+    }//GEN-LAST:event_txtBusquedapActionPerformed
 
     private void tableResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableResultadosMouseClicked
         // TODO add your handling code here:
@@ -1777,11 +1781,17 @@ public class compra extends javax.swing.JInternalFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        buscar_producto newfrm = new buscar_producto();
-        if (newfrm == null) {
-            newfrm = new buscar_producto();
-        }
-        AddForms.adminInternalFrame(panel_center, newfrm);
+        buscar_cliente form = new buscar_cliente();
+        
+        Comprueba = 1;
+        panel_center.add(form);
+
+        //   form.setClosable(true);
+        form.setIconifiable(true);
+        form.setClosable(true);
+        form.setMaximizable(false);
+        form.toFront();
+        form.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -1800,6 +1810,9 @@ public class compra extends javax.swing.JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        NewJPanel pvc = new NewJPanel();
+        JOptionPane.showInternalOptionDialog(this, pvc, "Buscar Producto: ",JOptionPane.OK_CANCEL_OPTION,
+                                            JOptionPane.QUESTION_MESSAGE, null, /*new Object[]{pvc.getLbAviso()},*/null,null);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void JBCambiarPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBCambiarPrecioActionPerformed
@@ -1866,7 +1879,7 @@ public class compra extends javax.swing.JInternalFrame {
 
         /* Guardamos el ID de dla fila selecciona en la variable s*/
         s = tableResultados.getSelectedRow();
-
+        System.out.print("---"+tableResultados.getValueAt(s, 1).toString()+"\n");
         /* Validamos que hallan seleccionado */
         if (s == -1) {
             JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro");
@@ -2028,16 +2041,16 @@ public class compra extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane scrollpaneResultados;
     private javax.swing.JTable tableResultados;
     private elaprendiz.gui.textField.TextField txIdproducto;
-    private elaprendiz.gui.textField.TextField txtBusqueda;
+    public static elaprendiz.gui.textField.TextField txtBusquedap;
     private javax.swing.JFormattedTextField txtCantidad;
     private elaprendiz.gui.textField.TextField txtCodigo;
     private javax.swing.JFormattedTextField txtCosto;
     private javax.swing.JFormattedTextField txtDescuento;
     private javax.swing.JFormattedTextField txtExistencia;
     private javax.swing.JFormattedTextField txtImporte;
-    private elaprendiz.gui.textField.TextField txtNit;
+    public static elaprendiz.gui.textField.TextField txtNit;
     private elaprendiz.gui.textField.TextField txtNombre;
-    private elaprendiz.gui.textField.TextField txtNombrecliente;
+    public static elaprendiz.gui.textField.TextField txtNombrecliente;
     private javax.swing.JFormattedTextField txtNuevacant;
     private javax.swing.JFormattedTextField txtPrecio;
     private javax.swing.JFormattedTextField txtPreciocondescuento;

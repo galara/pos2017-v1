@@ -66,11 +66,11 @@ public class Peticiones extends Datos {
         ResultSet rs = this.getRegistros(sql);
         return rs;
     }
-    
+
     public ResultSet consultaNit_Clientes(String buscar) {
 
         String sql = "SELECT * FROM clientes "
-                + "WHERE codigo='"+ buscar + "' or nit='" + buscar + "'";
+                + "WHERE codigo='" + buscar + "' or nit='" + buscar + "'";
 
         ResultSet rs = this.getRegistros(sql);
         return rs;
@@ -140,12 +140,32 @@ public class Peticiones extends Datos {
         ResultSet rs = this.getRegistros(sql);
         return rs;
     }
-    
+
     public ResultSet consultaCodigo_Producto(String buscar) {
 
         String sql = "SELECT * FROM unidad INNER JOIN producto "
                 + "ON unidad.idunidad = producto.idunidad WHERE producto.codigo='" + buscar + "'";
 
+        ResultSet rs = this.getRegistros(sql);
+        return rs;
+    }
+
+    public ResultSet Buacar_Producto(String buscar) {
+        
+        String sql = "SELECT\n"
+                + "     producto.idproducto, producto.codigo, producto.nombre, producto.observacion,\n"
+                + "     producto.ubicacion, producto.preciocoste, producto.precioventa, producto.preciomayoreo,\n"
+                + "     producto.invminimo, producto.existencia, producto.fec_reg, producto.Categoria_idCategoria,\n"
+                + "     producto.idunidad, producto.estado, categoria.nombre, categoria.estado,\n"
+                + "     unidad.nombre, unidad.estado\n"
+                + "FROM\n"
+                + "     categoria INNER JOIN producto ON categoria.idCategoria = producto.Categoria_idCategoria\n"
+                + "     INNER JOIN unidad ON producto.idunidad = unidad.idUnidad"
+                + " WHERE producto.nombre LIKE  '%" + buscar + "%' or categoria.nombre LIKE  '%" + buscar + "%' or unidad.nombre LIKE  '%" + buscar + "%'"
+                + " or producto.codigo='" + buscar + "'";
+
+//        String sql = "SELECT * FROM unidad INNER JOIN producto "
+//                + "ON unidad.idunidad = producto.idunidad WHERE producto.codigo='" + buscar + "'";
         ResultSet rs = this.getRegistros(sql);
         return rs;
     }

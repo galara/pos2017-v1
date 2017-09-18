@@ -183,26 +183,26 @@ public class buscar_producto extends javax.swing.JInternalFrame {
              llenar la tabla con los registros.
             
              */
-            ResultSet rs = peticiones.consultaProducto(nombre);
+            ResultSet rs = peticiones.Buacar_Producto(nombre);
             Object[] registro = new Object[8];
 
             /* Hacemos un while que mientras en rs hallan datos el ira agregando
              filas a la tabla. */
             while (rs.next()) {
 
-                registro[0] = rs.getString("idproducto");
-                registro[1] = rs.getString("codigo");
-                registro[2] = rs.getString("nombre");
-                registro[3] = rs.getString("preciocoste");
-                registro[4] = rs.getString("precioventa");
-                registro[5] = rs.getString("preciomayoreo");
+                registro[0] = rs.getString("producto.idproducto");
+                registro[1] = rs.getString("producto.codigo");
+                registro[2] = rs.getString("producto.nombre");
+                registro[3] = rs.getString("producto.preciocoste");
+                registro[4] = rs.getString("producto.precioventa");
+                registro[5] = rs.getString("producto.preciomayoreo");
 
-                if (rs.getString("estado").equals("1")) {
+                if (rs.getString("producto.estado").equals("1")) {
                     registro[6] = ("Activo");
-                } else if (rs.getString("estado").equals("0")) {
+                } else if (rs.getString("producto.estado").equals("0")) {
                     registro[6] = ("Inactivo");
                 }
-                registro[7] = rs.getString("fec_reg");
+                registro[7] = rs.getString("producto.fec_reg");
                 model.addRow(registro);
             }
             tableResultados.setModel(model);
@@ -433,7 +433,7 @@ public class buscar_producto extends javax.swing.JInternalFrame {
         txtMinimo = new javax.swing.JFormattedTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setName("producto"); // NOI18N
+        setName("buscar_producto"); // NOI18N
         setOpaque(true);
 
         panelImage.setBackground(new java.awt.Color(255, 255, 255));
@@ -537,7 +537,7 @@ public class buscar_producto extends javax.swing.JInternalFrame {
         );
 
         panelImage.add(panelBotones);
-        panelBotones.setBounds(0, 22, 890, 0);
+        panelBotones.setBounds(0, 22, 890, 68);
 
         panelBusqueda.setBackground(java.awt.SystemColor.activeCaption);
         panelBusqueda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -604,7 +604,7 @@ public class buscar_producto extends javax.swing.JInternalFrame {
 
             labelEncabezado.setFont(new java.awt.Font("Decker", 1, 17)); // NOI18N
             labelEncabezado.setForeground(new java.awt.Color(255, 255, 255));
-            labelEncabezado.setText("PRODUCTOS");
+            labelEncabezado.setText("BUSCAR PRODUCTOS");
 
             javax.swing.GroupLayout panelEncabezadoLayout = new javax.swing.GroupLayout(panelEncabezado);
             panelEncabezado.setLayout(panelEncabezadoLayout);
@@ -930,48 +930,6 @@ public class buscar_producto extends javax.swing.JInternalFrame {
         txtBusqueda.requestFocus();
     }//GEN-LAST:event_bnBuscarActionPerformed
 
-    private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
-        // TODO add your handling code here:
-        int resp;
-        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
-        if (resp == 0) {
-            int s = 0;
-
-            /* Guardamos el ID de dla fila selecciona en la variable s */
-            s = tableResultados.getSelectedRow();
-
-            /* Validamos que hallan seleccionado */
-            if (s < 0) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
-                return;
-            }
-
-            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
-
-            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
-                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
-                nuevo();
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
-            }
-        }
-    }//GEN-LAST:event_bnSuprimirActionPerformed
-
-    private void bnDeudoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnDeudoresActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bnDeudoresActionPerformed
-
-    private void bnEstadocuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnEstadocuentaActionPerformed
-        // TODO add your handling code here:       
-    }//GEN-LAST:event_bnEstadocuentaActionPerformed
-
-    private void bnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnCrearActionPerformed
-        // TODO add your handling code here:  
-        editar = false;
-        nuevo();
-
-    }//GEN-LAST:event_bnCrearActionPerformed
-
     private void bnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnGuardarActionPerformed
 
         if (editar == false) {
@@ -1007,6 +965,41 @@ public class buscar_producto extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_tableResultadosMouseClicked
 
+    private void bnEstadocuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnEstadocuentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bnEstadocuentaActionPerformed
+
+    private void bnDeudoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnDeudoresActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bnDeudoresActionPerformed
+
+    private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
+        // TODO add your handling code here:
+        int resp;
+        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
+        if (resp == 0) {
+            int s = 0;
+
+            /* Guardamos el ID de dla fila selecciona en la variable s */
+            s = tableResultados.getSelectedRow();
+
+            /* Validamos que hallan seleccionado */
+            if (s < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+                return;
+            }
+
+            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+
+            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
+                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
+                nuevo();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            }
+        }
+    }//GEN-LAST:event_bnSuprimirActionPerformed
+
     private void bnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnEditarActionPerformed
 
         int s = 0;
@@ -1025,6 +1018,12 @@ public class buscar_producto extends javax.swing.JInternalFrame {
         //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
         editar = true;
     }//GEN-LAST:event_bnEditarActionPerformed
+
+    private void bnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnCrearActionPerformed
+        // TODO add your handling code here:
+        editar = false;
+        nuevo();
+    }//GEN-LAST:event_bnCrearActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
