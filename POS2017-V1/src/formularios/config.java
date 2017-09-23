@@ -460,9 +460,9 @@ public class config extends javax.swing.JInternalFrame {
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         // TODO add your handling code here:
-        compra newfrm = new compra();
+        frmVenta newfrm = new frmVenta();
         if (newfrm == null) {
-            newfrm = new compra();
+            newfrm = new frmVenta();
         }
         AddForms.adminInternalFrame(panel_center, newfrm);
     }//GEN-LAST:event_jLabel6MouseClicked

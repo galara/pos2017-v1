@@ -8,10 +8,11 @@ package formularios;
 import clases.Datos;
 import clases.Peticiones;
 import clases.Utilidades;
-import static formularios.compra.txtBusquedap;
-import static formularios.compra.txtNit;
-import static formularios.compra.txtNombrecliente;
-import static formularios.compra.valorId;
+import static formularios.frmVenta.txtBusquedap;
+import static formularios.frmVenta.txtDireccion;
+import static formularios.frmVenta.txtNit;
+import static formularios.frmVenta.txtNombrecliente;
+import static formularios.frmVenta.valorId;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -167,8 +168,8 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 //                
 //            }
 //            if (Comprueba == 2) {
-////            compra.txtNit.setText(cod);
-////            compra.txtNombrecliente.setText(nombre);
+////            frmVenta.txtNit.setText(cod);
+////            frmVenta.txtNombrecliente.setText(nombre);
 //            }
             ResultSet rs = peticiones.consultaRegistrosId(nombreTabla,
                     (String) tableResultados.getValueAt(s, 0), nombreId);
@@ -184,11 +185,12 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
                     valorId = (rs.getString("idClientes"));
                     txtNit.setText(rs.getString("nit"));
                     txtNombrecliente.setText(rs.getString("nombre"));
+                    txtDireccion.setText(rs.getString("direccion"));
 
                 }
                 if (Comprueba == 2) {
-//            compra.txtNit.setText(cod);
-//            compra.txtNombrecliente.setText(nombre);
+//            frmVenta.txtNit.setText(cod);
+//            frmVenta.txtNombrecliente.setText(nombre);
                 }
 
 //                txtCodigo.setText(rs.getString("codigo"));
