@@ -30,7 +30,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
      * Variables para realizar las transacciones con la base de datos
      */
     String nombreTabla = "clientes";
-    //String[] titulos = {"Id", "Código", "Nombre Cliente", "Dirección", "Nit", "Limite Créd"};
     String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio.Norm", "Precio C.Desc", "Descuento %", "Subtotal", "Precio Costo"};
     String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
     String nombreId = "idClientes";
@@ -55,14 +54,14 @@ public class frmVenta extends javax.swing.JInternalFrame {
         tableResultados.getColumnModel().getColumn(0).setPreferredWidth(0);
         //Utilidades.ajustarAnchoColumnas(tableResultados);
 
-        tableResultados.getModel().addTableModelListener(new TableModelListener() {
-            public void tableChanged(TableModelEvent e) {
-                //sumar_total();
-                //cambiar_precio.setVisible(true);
-                //sumartotal();
-                //formatotabla();
-            }
-        });
+//        tableResultados.getModel().addTableModelListener(new TableModelListener() {
+//            public void tableChanged(TableModelEvent e) {
+//                //sumar_total();
+//                //cambiar_precio.setVisible(true);
+//                //sumartotal();
+//                //formatotabla();
+//            }
+//        });
     }
 
     /**
@@ -117,46 +116,39 @@ public class frmVenta extends javax.swing.JInternalFrame {
     public void sumar_total() {
         //corregir cuando hay solo unalinea da error
         if (tableResultados.getRowCount() == 0 && tableResultados.getSelectedRow() == -1) {
-            //JOptionPane.showMessageDialog(null, "La tabla no contiene datos que modificar");
             txtTotal.setValue(0.00);
         } else {
             float total_actual, total_final = 0;
-
             for (int i = 0; i < model.getRowCount(); i++) {
-
-                //if (tabladetallecompra.getValueAt(i, 6).toString().equals("true")) {
                 total_actual = Float.parseFloat(tableResultados.getValueAt(i, 8).toString());
                 total_final = total_final + total_actual;
-                // }
-
             }
             txtTotal.setValue(Math.round(total_final * 100.0) / 100.0);
         }
     }
 
-    public void modificar_precio() {
-
-        Float ca, pr;
-        int fila = tableResultados.getSelectedRow();
-        ca = Float.parseFloat(Validar(tableResultados.getValueAt(fila, 3).toString()));
-        pr = Float.parseFloat(Validar(tableResultados.getValueAt(fila, 4).toString()));
-        //ps.setText("" + tableResultados.getSelectedRow());
-        if (tableResultados.getSelectedColumn() == 6) {
-        } else {
-
-//            cambio.setVisible(true);
-//            Cantidad.setValue(ca);
-//            precio.setValue(pr);
-//            cambio.setSize(319, 115);
-//            cambio.setResizable(false);
-//            Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-//            Dimension ventana = cambio.getSize();
-//            cambio.setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
-//            cambio.toFront();//aparece al frente
-//            sumartotal();
-        }
-    }
-
+//    public void modificar_precio() {
+//
+//        Float ca, pr;
+//        int fila = tableResultados.getSelectedRow();
+//        ca = Float.parseFloat(Validar(tableResultados.getValueAt(fila, 3).toString()));
+//        pr = Float.parseFloat(Validar(tableResultados.getValueAt(fila, 4).toString()));
+//        if (tableResultados.getSelectedColumn() == 6) {
+//            
+//        } else {
+//
+////            cambio.setVisible(true);
+////            Cantidad.setValue(ca);
+////            precio.setValue(pr);
+////            cambio.setSize(319, 115);
+////            cambio.setResizable(false);
+////            Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+////            Dimension ventana = cambio.getSize();
+////            cambio.setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
+////            cambio.toFront();//aparece al frente
+////            sumartotal();
+//        }
+//    }
     public void cambiarPrecio() {
 
         /* Variable que contendra el ID de la fila seleccionada */
@@ -213,8 +205,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         float nprecios = Float.parseFloat(Validar(JDNuevoprecio.getText()));
         nprecios = (float) (Math.round((nprecios) * 100.0) / 100.0);
 
-//        float Porcentaje = Float.parseFloat(Validar(JDdescuento.getText()));
-//        Porcentaje = (float) (Math.round((Porcentaje) * 100.0) / 100.0);
         float subtotal;
         subtotal = (float) (Math.round((cantidad * nprecios) * 100.0) / 100.0);
 
@@ -242,17 +232,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
         dif = (float) (Math.round((precionormal * desc) * 100.0) / 100.0);
         preciocondescuento = (float) (Math.round((precionormal - dif) * 100.0) / 100.0);
 
-//        float costo = Float.parseFloat(Validar(JDcosto.getText()));
-//        costo = (float) (Math.round((costo) * 100.0) / 100.0);
-        // if (preciocondescuento >= costo) {
         if ((preciocondescuento > 0 && preciocondescuento <= precionormal)) {
             JDnuevoPrecio.setValue(preciocondescuento);
         } else {
             JDnuevoPrecio.setValue(0.00);
         }
-//        } else {
-//            JOptionPane.showInternalMessageDialog(this, "El nuevo precio es menor al costo", "Error", JOptionPane.INFORMATION_MESSAGE);
-//        }
     }
 
     public void calcularDescuento() {
@@ -265,9 +249,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         float nuevoprecio = Float.parseFloat(Validar(JDnuevoPrecio.getText()));
         nuevoprecio = (float) (Math.round((nuevoprecio) * 100.0) / 100.0);
 
-//        float costo = Float.parseFloat(Validar(JDcosto.getText()));
-//        costo = (float) (Math.round((costo) * 100.0) / 100.0);
-        //if (nuevoprecio >= costo) {
         dif = (float) (Math.round((precionormal - nuevoprecio) * 100.0) / 100.0);
         desc = (float) (Math.round(((dif / precionormal) * 100) * 100.0) / 100.0);
 
@@ -276,9 +257,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         } else {
             JDdescuento.setValue(0.00);
         }
-//        } else {
-//            JOptionPane.showInternalMessageDialog(this, "El nuevo precio es menor al costo", "Error", JOptionPane.INFORMATION_MESSAGE);
-//        }
     }
 
     /* Funcion para llenar la tabla cuando se busque un cliente en especifico
@@ -288,7 +266,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         try {
             /* Limpiamos los campos*/
             txtNombrecliente.setText("");
-
+            txtDireccion.setText("");
             /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
              los clientes relaciones con el valor a buscar en la base de datos. 
             
@@ -297,7 +275,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
             
              */
             ResultSet rs = peticiones.consultaNit_Clientes(nombre);
-            Object[] registro = new Object[4];
+            //Object[] registro = new Object[4];
 
             if (rs.next()) {//verifica si esta vacio, pero desplaza el puntero al siguiente elemento
                 rs.beforeFirst();//regresa el puntero al primer registro
@@ -342,7 +320,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
             
              */
             ResultSet rs = peticiones.consultaCodigo_Producto(nombre);
-            //Object[] registro = new Object[4];
 
             if (rs.next()) {//verifica si esta vacio, pero desplaza el puntero al siguiente elemento
                 rs.beforeFirst();//regresa el puntero al primer registro
@@ -353,32 +330,22 @@ public class frmVenta extends javax.swing.JInternalFrame {
                     txtCodigo.setText(rs.getString("producto.codigo"));
                     txtNombre.setText(rs.getString("producto.nombre"));
                     txtUnidad.setText(rs.getString("unidad.nombre"));
-                    //txtCantidad.setText("");
                     if (jCheckPrecioMayoreo.isSelected()) {
                         txtPrecio.setValue(rs.getFloat("producto.preciomayoreo"));
                     } else {
                         txtPrecio.setValue(rs.getFloat("producto.precioventa"));
                     }
-
-                    //txtPrecio.setText("preciomayoreo");
                     txtExistencia.setValue(rs.getFloat("producto.existencia"));
                     txtCosto.setValue(rs.getFloat("producto.preciocoste"));
-                    //txtImporte.setText("");
-
-                    //txtNit.setText(rs.getString("nit"));
-                    //txtNombrecliente.setText(rs.getString("nombre"));
                 }
                 if (cboModoIngreso.getSelectedItem().equals("x Unidad")) {
                     txtCantidad.setValue(1);
                     txtDescuento.setValue(0);
-
                     descuento();
                 } else if (cboModoIngreso.getSelectedItem().equals("x Mayor")) {
                     txtCantidad.requestFocus();
                 }
-
             }
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         }
@@ -388,23 +355,8 @@ public class frmVenta extends javax.swing.JInternalFrame {
      por el código, nombre, nit  */
     public void agregarProducto(String nombre) {
 
-        // try {
-        /* Limpiamos la tabla */
-        //model.setRowCount(0);
-
-        /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
-             los clientes relaciones con el valor a buscar en la base de datos. 
-            
-             - Los datos recibidos lo guardamos en el objeto ResulSet para luego
-             llenar la tabla con los registros.
-            
-         */
-        //ResultSet rs = peticiones.consultaClientes(nombre);
         Object[] registro = new Object[10];
 
-        /* Hacemos un while que mientras en rs hallan datos el ira agregando
-             filas a la tabla. */
-        //while (rs.next()) {
         registro[0] = txIdproducto.getText();
         registro[1] = txtCodigo.getText();
         registro[2] = txtNombre.getText();
@@ -416,13 +368,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
         registro[8] = Float.parseFloat(txtImporte.getText());
         registro[9] = Float.parseFloat(txtCosto.getText());
 
-        //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
         model.addRow(registro);
-        // }
         tableResultados.setModel(model);
+
         Utilidades.ajustarAnchoColumnas(tableResultados);
         sumar_total();
-
         txIdproducto.setText("");
         txtBusquedap.setText("");
         txtCodigo.setText("");
@@ -435,11 +385,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         txtCosto.setValue(null);
         txtExistencia.setValue(null);
         txtBusquedap.requestFocus();
-
-        //} 
-//        catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
-//        }
     }
 
     /* Funcion para llenar la tabla cuando se busque un cliente en especifico
@@ -470,7 +415,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
                 registro[3] = rs.getString("direccion");
                 registro[4] = rs.getString("nit");
                 registro[5] = rs.getString("lim_cred");
-                //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
                 model.addRow(registro);
             }
             tableResultados.setModel(model);
@@ -480,52 +424,15 @@ public class frmVenta extends javax.swing.JInternalFrame {
         }
     }
 
-//    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
-//     por el Id */
-//    public void llenarFormulario(int s) {
-//
-//        try {
-//
-//            /* Llamamos a la funcion consultaRegistrosId la cual nos devuelve todos 
-//             los empleados relaciones con el id a buscar en la base de datos. 
-//            
-//             - Los datos recibidos lo guardamos en el objeto ResulSet para luego
-//             llenar la tabla con los registros.
-//            
-//             */
-//            ResultSet rs = peticiones.consultaRegistrosId(nombreTabla,
-//                    (String) tableResultados.getValueAt(s, 0), nombreId);
-//
-//            /* Hacemos un while que mientras en rs hallan datos el ira agregando
-//             filas a la tabla. */
-//            while (rs.next()) {
-//                //txtCodigo.setText(rs.getString("codigo"));
-//                //txtNombre.setText(rs.getString("nombre"));
-//                txtNit.setText(rs.getString("direccion"));
-//                //txtCorreo.setText(rs.getString("correo"));
-//                //txtNit.setText(rs.getString("nit"));
-//                //txtTelefono.setText(rs.getString("telefono"));
-//                dateFecha.setDate(rs.getDate("fec_reg"));
-//                //txtTotal.setText(rs.getString("lim_cred"));
-//                //rbEstado.setSelected(rs.getBoolean("estado"));
-//
-//            }
-//
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
-//        }
-//
-//    }
     /**
      * Realiza la transacción para guardar los recistros de un nuevo cliente
      */
     private void Guardar() {
 
-        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
-            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+//        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
+//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
         Object[] cliente = {
             /*txtCodigo.getText(), txtNombre.getText(),*/txtNit.getText(),
             /*txtCorreo.getText(), txtNit.getText(),
@@ -558,12 +465,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
             return;
         }
 
-        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
-            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son"
-                    + " Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+//        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
+//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son"
+//                    + " Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
         String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 
         Object[] cliente = {
@@ -614,14 +520,10 @@ public class frmVenta extends javax.swing.JInternalFrame {
         desc = (float) (Math.round((Float.parseFloat(txtDescuento.getText()) / 100) * 100.0) / 100.0);
         dif = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) * desc) * 100.0) / 100.0);
         precd = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) - dif) * 100.0) / 100.0);
-        //subtotal = (Float.parseFloat(txtCantidad.getText()) * precd);
         subtotal = (float) (Math.round(((Float.parseFloat(txtCantidad.getText()) * precd)) * 100.0) / 100.0);
-
         txtPreciocondescuento.setText("" + precd);
-
         txtImporte.setText("" + subtotal);
         agregarProducto("");
-
     }
 
     /**
@@ -708,19 +610,15 @@ public class frmVenta extends javax.swing.JInternalFrame {
         panelResultados = new javax.swing.JPanel();
         scrollpaneResultados = new javax.swing.JScrollPane();
         tableResultados = new javax.swing.JTable();
-        panelFormulario = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        labelCorreo3 = new javax.swing.JLabel();
-        rbEstado1 = new javax.swing.JRadioButton();
-        jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        txtTotal = new javax.swing.JFormattedTextField();
         panelEncabezado = new jcMousePanel.jcMousePanel();
         labelEncabezado = new javax.swing.JLabel();
         panelBotonesformulario = new javax.swing.JPanel();
         bnGuardar = new javax.swing.JButton();
         bnCancelar = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        txtTotal = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         cambiar_precio.setBackground(java.awt.Color.white);
         cambiar_precio.setMinimumSize(new java.awt.Dimension(225, 174));
@@ -1355,7 +1253,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/product.png"))); // NOI18N
         jPanel5.add(jLabel1);
-        jLabel1.setBounds(110, 50, 20, 27);
+        jLabel1.setBounds(105, 50, 20, 27);
 
         labelCodigo7.setFont(new java.awt.Font("Decker", 0, 14)); // NOI18N
         labelCodigo7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1526,7 +1424,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
             tableResultados.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             tableResultados.setFocusCycleRoot(true);
             tableResultados.setName("detalle_compra"); // NOI18N
-            tableResultados.setRowHeight(24);
+            tableResultados.setRowHeight(22);
             tableResultados.setSurrendersFocusOnKeystroke(true);
             tableResultados.setUpdateSelectionOnSort(false);
             tableResultados.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1539,107 +1437,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
             panelResultados.add(scrollpaneResultados, java.awt.BorderLayout.CENTER);
 
             panelImage.add(panelResultados);
-            panelResultados.setBounds(0, 339, 890, 240);
-
-            panelFormulario.setBackground(new java.awt.Color(255, 255, 255));
-            panelFormulario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-            panelFormulario.setLayout(null);
-
-            jPanel2.setBorder(new javax.swing.border.LineBorder(java.awt.SystemColor.textHighlight, 1, true));
-            jPanel2.setOpaque(false);
-
-            labelCorreo3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-            labelCorreo3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-            labelCorreo3.setText("Pagado");
-            labelCorreo3.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
-            rbEstado1.setBackground(new java.awt.Color(255, 255, 255));
-            rbEstado1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-            rbEstado1.setSelected(true);
-            rbEstado1.setEnabled(false);
-
-            jLabel2.setFont(new java.awt.Font("Decker", 1, 48)); // NOI18N
-            jLabel2.setForeground(new java.awt.Color(0, 102, 255));
-            jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-            jLabel2.setText("Q");
-
-            jButton3.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
-            jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/search24.png"))); // NOI18N
-            jButton3.setText("Consultar");
-            jButton3.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButton3ActionPerformed(evt);
-                }
-            });
-
-            jButton4.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
-            jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/yast_printer.png"))); // NOI18N
-            jButton4.setText("Re imprimir");
-            jButton4.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButton4ActionPerformed(evt);
-                }
-            });
-
-            txtTotal.setEditable(false);
-            txtTotal.setBackground(new java.awt.Color(255, 255, 255));
-            txtTotal.setBorder(null);
-            txtTotal.setForeground(new java.awt.Color(0, 102, 255));
-            txtTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
-            txtTotal.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-            txtTotal.setToolTipText("");
-            txtTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-            txtTotal.setFont(new java.awt.Font("Arial", 1, 40)); // NOI18N
-            txtTotal.setPreferredSize(new java.awt.Dimension(80, 23));
-
-            javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-            jPanel2.setLayout(jPanel2Layout);
-            jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(13, 13, 13)
-                    .addComponent(jButton4)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(jButton3)
-                    .addGap(53, 53, 53)
-                    .addComponent(labelCorreo3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(rbEstado1)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
-            );
-            jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE)))
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(rbEstado1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelCorreo3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            );
-
-            panelFormulario.add(jPanel2);
-            jPanel2.setBounds(10, 10, 870, 62);
-
-            panelImage.add(panelFormulario);
-            panelFormulario.setBounds(0, 580, 890, 80);
+            panelResultados.setBounds(0, 339, 890, 320);
 
             panelEncabezado.setColor1(new java.awt.Color(102, 153, 255));
             panelEncabezado.setColor2(new java.awt.Color(255, 255, 255));
@@ -1670,7 +1468,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
             panelBotonesformulario.setBackground(java.awt.SystemColor.activeCaption);
             panelBotonesformulario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-            panelBotonesformulario.setLayout(new java.awt.GridBagLayout());
 
             bnGuardar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
             bnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/ingresar.png"))); // NOI18N
@@ -1684,7 +1481,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
                     bnGuardarActionPerformed(evt);
                 }
             });
-            panelBotonesformulario.add(bnGuardar, new java.awt.GridBagConstraints());
 
             bnCancelar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
             bnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancelar.png"))); // NOI18N
@@ -1695,7 +1491,80 @@ public class frmVenta extends javax.swing.JInternalFrame {
                     bnCancelarActionPerformed(evt);
                 }
             });
-            panelBotonesformulario.add(bnCancelar, new java.awt.GridBagConstraints());
+
+            jButton4.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
+            jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/yast_printer.png"))); // NOI18N
+            jButton4.setText("Re imprimir");
+            jButton4.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButton4ActionPerformed(evt);
+                }
+            });
+
+            jButton3.setFont(new java.awt.Font("Decker", 0, 12)); // NOI18N
+            jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/search24.png"))); // NOI18N
+            jButton3.setText("Consultar");
+            jButton3.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButton3ActionPerformed(evt);
+                }
+            });
+
+            txtTotal.setEditable(false);
+            txtTotal.setBackground(new java.awt.Color(255, 255, 255));
+            txtTotal.setBorder(null);
+            txtTotal.setForeground(new java.awt.Color(0, 102, 255));
+            txtTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new FormatoDecimal("#####0.00",true))));
+            txtTotal.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            txtTotal.setToolTipText("");
+            txtTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+            txtTotal.setFont(new java.awt.Font("Arial", 1, 37)); // NOI18N
+            txtTotal.setPreferredSize(new java.awt.Dimension(80, 23));
+
+            jLabel2.setFont(new java.awt.Font("Decker", 1, 44)); // NOI18N
+            jLabel2.setForeground(new java.awt.Color(0, 102, 255));
+            jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+            jLabel2.setText("Q");
+
+            javax.swing.GroupLayout panelBotonesformularioLayout = new javax.swing.GroupLayout(panelBotonesformulario);
+            panelBotonesformulario.setLayout(panelBotonesformularioLayout);
+            panelBotonesformularioLayout.setHorizontalGroup(
+                panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelBotonesformularioLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jButton4)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton3)
+                    .addGap(18, 18, 18)
+                    .addComponent(bnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(bnCancelar)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+            );
+            panelBotonesformularioLayout.setVerticalGroup(
+                panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelBotonesformularioLayout.createSequentialGroup()
+                    .addGroup(panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBotonesformularioLayout.createSequentialGroup()
+                            .addGap(7, 7, 7)
+                            .addGroup(panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(bnCancelar)
+                                    .addComponent(bnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(panelBotonesformularioLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(panelBotonesformularioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
 
             panelImage.add(panelBotonesformulario);
             panelBotonesformulario.setBounds(0, 660, 890, 60);
@@ -1769,7 +1638,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
     private void bnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnCancelarActionPerformed
         // TODO add your handling code here:
-        Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
+        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
         Utilidades.setEditableTexto(this.panelBusqueda, true, null, true, "");
         Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
         Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
@@ -1803,7 +1672,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
             return;
         }
         tableMouseClicked();
-        Utilidades.setEditableTexto(this.panelFormulario, true, null, false, "");
+        //Utilidades.setEditableTexto(this.panelFormulario, true, null, false, "");
         Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
         editar = true;
     }//GEN-LAST:event_bnEditarActionPerformed
@@ -1822,18 +1691,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private void txtDescuentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescuentoActionPerformed
         // TODO add your handling code here:
         descuento();
-//        Float precd, desc, dif, subtotal;
-//
-//        desc = (float) (Math.round((Float.parseFloat(txtDescuento.getText()) / 100) * 100.0) / 100.0);
-//        dif = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) * desc) * 100.0) / 100.0);
-//        precd = (float) (Math.round((Float.parseFloat(txtPrecio.getText()) - dif) * 100.0) / 100.0);
-//        //subtotal = (Float.parseFloat(txtCantidad.getText()) * precd);
-//        subtotal = (float) (Math.round(((Float.parseFloat(txtCantidad.getText()) * precd)) * 100.0) / 100.0);
-//
-//        txtPreciocondescuento.setText("" + precd);
-//
-//        txtImporte.setText("" + subtotal);
-//        agregarProducto("");
     }//GEN-LAST:event_txtDescuentoActionPerformed
 
     private void txIdproductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txIdproductoActionPerformed
@@ -1851,7 +1708,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         Comprueba = 1;
         panel_center.add(form);
 
-        //   form.setClosable(true);
         form.setIconifiable(true);
         form.setClosable(true);
         form.setMaximizable(false);
@@ -1860,17 +1716,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        //new cambiar_precio();
-//        cambiar_preci.setLocationRelativeTo(null);
-//        cambiar_preci.setVisible(true);
-        //this.add(cambiar_precio);
-        //productos newfrm = new productos();
-        //panelImage.add(cambiar_precio);
-//        if (newfrm == null) {
-//            newfrm = new productos();
-//        }
-//        AddForms.adminInternalFrame(panel_center, cambiar_precio);
+ 
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -1890,9 +1736,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         float preciocondescuento = Float.parseFloat(Validar(JDnuevoPrecio.getText()));
         preciocondescuento = (float) (Math.round((preciocondescuento) * 100.0) / 100.0);
 
-//        desc = (float) (Math.round((descuento / 100) * 100.0) / 100.0);
-//        dif = (float) (Math.round((precionormal * desc) * 100.0) / 100.0);
-//        preciocondescuento = (float) (Math.round((precionormal - dif) * 100.0) / 100.0);
         float costo = Float.parseFloat(Validar(JDcosto.getText()));
         costo = (float) (Math.round((costo) * 100.0) / 100.0);
 
@@ -1975,10 +1818,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
         int s = 0;
 
-        /* Limpiamos los campos del formulario */
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
-        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
-
         /* Guardamos el ID de dla fila selecciona en la variable s*/
         s = tableResultados.getSelectedRow();
         System.out.print(s);
@@ -2010,10 +1849,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         /* Variable que contendra el ID de la fila seleccionada */
         int s = 0;
 
-        /* Limpiamos los campos del formulario */
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
-        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
-
         /* Guardamos el ID de dla fila selecciona en la variable s*/
         s = tableResultados.getSelectedRow();
 
@@ -2038,21 +1873,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private void cboModoIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboModoIngresoActionPerformed
 
         if (cboModoIngreso.getSelectedItem() == "x Mayor") {
-//            txtCantidadProducto.setText("0");
-//            txtCantidadProducto.setEditable(false);
-//            txtNombre_producto.setEditable(false);
-//            txtStockDetalle.setEditable(false);
-//            txtPrecio_producto.setEditable(false);
-//            txtCod_producto.setEditable(true);
-//            txtCod_producto.requestFocus();
         } else if (cboModoIngreso.getSelectedItem() == "x Unidad") {
-//            txtCantidadProducto.setText("1");
-//            txtCod_producto.setEditable(true);
-//            txtCantidadProducto.setEditable(false);
-//            txtNombre_producto.setEditable(false);
-//            txtStockDetalle.setEditable(false);
-//            txtPrecio_producto.setEditable(false);
-//            txtCod_producto.requestFocus();
         }
     }//GEN-LAST:event_cboModoIngresoActionPerformed
 
@@ -2100,7 +1921,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel8;
@@ -2113,7 +1933,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelCodigo4;
     private javax.swing.JLabel labelCodigo5;
     private javax.swing.JLabel labelCodigo7;
-    private javax.swing.JLabel labelCorreo3;
     private javax.swing.JLabel labelCorreo4;
     private javax.swing.JLabel labelEncabezado;
     private javax.swing.JLabel labelFecha;
@@ -2122,11 +1941,9 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panelBotonesformulario;
     private javax.swing.JPanel panelBusqueda;
     private jcMousePanel.jcMousePanel panelEncabezado;
-    private javax.swing.JPanel panelFormulario;
     private elaprendiz.gui.panel.PanelImage panelImage;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JPopupMenu popupCambiar;
-    private javax.swing.JRadioButton rbEstado1;
     private javax.swing.JScrollPane scrollpaneResultados;
     private javax.swing.JTable tableResultados;
     private elaprendiz.gui.textField.TextField txIdproducto;

@@ -204,7 +204,7 @@ public class frmPrincipal extends javax.swing.JFrame {
         txtUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtUsuario.setText(AccesoUsuario.getUsuario());
 
-        jLabel3.setFont(new java.awt.Font("Decker", 1, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Decker", 1, 20)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 102, 204));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Le atiende:");

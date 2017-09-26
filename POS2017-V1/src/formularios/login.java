@@ -7,7 +7,7 @@ package formularios;
 
 import clases.AccesoUsuario;
 import java.awt.Color;
-import javax.swing.UIManager;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -107,6 +107,7 @@ public class login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Iniciar sesión");
         setBackground(new java.awt.Color(0, 153, 255));
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/pointofsale.png")).getImage());
         setUndecorated(true);
         setResizable(false);
 
@@ -122,7 +123,7 @@ public class login extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Iniciar sesión");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Usuario.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-User-32.png"))); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Decker", 0, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(153, 153, 153));
@@ -144,7 +145,7 @@ public class login extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Contraseña");
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/padlocked.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-Bloquear Filled-32.png"))); // NOI18N
 
         buttonIniciar.setBackground(new java.awt.Color(0, 102, 153));
         buttonIniciar.setText("Siguiente");

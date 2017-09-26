@@ -20,7 +20,7 @@ public class Conexion {
     private static PreparedStatement ps = null;
 
     private static String host = "localhost";//"192.168.0.20";
-    public static String dbname = "pos";//"agrofatima2"; //nombre base de datos
+    public static String dbname = "pos2";//"agrofatima2"; //nombre base de datos
     public static String user = "root";//"agrofatima2"; // usuario de la base de datos
     public static String passw = "superprecios";//*/"rdwLWVx9cWcyyPFe"; 
 

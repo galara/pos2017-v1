@@ -28,7 +28,7 @@ public class productos extends javax.swing.JInternalFrame {
      */
     String nombreTabla = "producto";
     String[] titulos = {"Id", "Código", "Descripción Producto", "Costo", "Precio Venta", "Precio Mayoreo", "Estado", "Fecha Reg",};
-    String campos = "codigo, nombre, idunidad, Categoria_idCategoria, observacion, "
+    String campos = "codigo, nombre, idunidad, idCategoria, observacion, "
             + "fec_reg, estado, ubicacion, invminimo, existencia, preciocoste, precioventa, preciomayoreo";
     String nombreId = "idproducto";
 
@@ -237,7 +237,7 @@ public class productos extends javax.swing.JInternalFrame {
                 comboCategoria.setEditable(true);
                 int u = Integer.parseInt((String) hashUnidad.get(hashUnidad2.get(rs.getString("idunidad"))));
                 comboUnidad.setSelectedIndex(u);
-                int c = Integer.parseInt((String) hashCategoria.get(hashCategoria2.get(rs.getString("Categoria_idCategoria"))));
+                int c = Integer.parseInt((String) hashCategoria.get(hashCategoria2.get(rs.getString("idCategoria"))));
                 comboCategoria.setSelectedIndex(c);
                 txtObservacion.setText(rs.getString("observacion"));
                 dateFecha.setDate(rs.getDate("fec_reg"));

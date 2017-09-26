@@ -155,11 +155,11 @@ public class Peticiones extends Datos {
         String sql = "SELECT\n"
                 + "     producto.idproducto, producto.codigo, producto.nombre, producto.observacion,\n"
                 + "     producto.ubicacion, producto.preciocoste, producto.precioventa, producto.preciomayoreo,\n"
-                + "     producto.invminimo, producto.existencia, producto.fec_reg, producto.Categoria_idCategoria,\n"
+                + "     producto.invminimo, producto.existencia, producto.fec_reg, producto.idCategoria,\n"
                 + "     producto.idunidad, producto.estado, categoria.nombre, categoria.estado,\n"
                 + "     unidad.nombre, unidad.estado\n"
                 + "FROM\n"
-                + "     categoria INNER JOIN producto ON categoria.idCategoria = producto.Categoria_idCategoria\n"
+                + "     categoria INNER JOIN producto ON categoria.idCategoria = producto.idCategoria\n"
                 + "     INNER JOIN unidad ON producto.idunidad = unidad.idUnidad"
                 + " WHERE producto.nombre LIKE  '%" + buscar + "%' or categoria.nombre LIKE  '%" + buscar + "%' or unidad.nombre LIKE  '%" + buscar + "%'"
                 + " or producto.codigo='" + buscar + "'";
