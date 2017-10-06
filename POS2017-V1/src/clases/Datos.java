@@ -279,7 +279,8 @@ public class Datos {
              insert a la tabla cliente */
             sql = "insert into " + nombreTabla + "(" + generarArrayAString(campos) + ") values("
                     + formatearValores(valores.length) + ")";
-
+            
+            //System.out.print(sql+"\n");
             /* El createStatement cree un cuadro donde se puede insertar codigo
              sql, el statement se podria decir que es el cuadro en blanco que
              te da el phpmyadmin para insertar codigo sql. */
@@ -291,7 +292,7 @@ public class Datos {
             ps.executeUpdate();
             ps.close();
             return true;
-
+            
         } catch (SQLException ex) {
             if (ex.getErrorCode() == 1062) {
                 JOptionPane.showMessageDialog(null, "Ya existe el código, porfavor asigne uno diferente");
@@ -334,7 +335,8 @@ public class Datos {
             if (ex.getErrorCode() == 1062) {
                 JOptionPane.showMessageDialog(null, "Ya existe el código, porfavor asigne uno diferente");
             } else {
-                JOptionPane.showMessageDialog(null, "Problema con: " + ex.getErrorCode());
+                //System.out.print(sql+"\n");
+                JOptionPane.showMessageDialog(null, "Problema con: " + ex.getErrorCode() + "  "+ex.getMessage());
             }
             return id;
         }
@@ -352,7 +354,7 @@ public class Datos {
     public boolean modificar(String nomTabla, String cnls, Object[] valores) {
 
         sql = "update " + nomTabla + " set " + cnls;
-        //System.out.print(sql + "\n");
+        System.out.print(sql + "\n");
 
         boolean op = false;
         try {
@@ -485,7 +487,7 @@ public class Datos {
         try {
             for (int i = 0; i < valores.length; i++) {
 
-                //System.out.print(valores[i] + "\n"+i);
+                System.out.print(valores[i] + "\n");
                 if (getInt(valores[i]) != null) {
                     ps.setInt(i + 1, getInt(valores[i]));
                 } else if (getDouble(valores[i]) != null) {

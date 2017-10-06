@@ -12,7 +12,6 @@ import static formularios.frmVenta.txtBusquedap;
 import static formularios.frmVenta.txtDireccion;
 import static formularios.frmVenta.txtNit;
 import static formularios.frmVenta.txtNombrecliente;
-import static formularios.frmVenta.valorId;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import static formularios.frmVenta.valorIdcliente;
 
 /**
  *
@@ -162,7 +162,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 
 //            if (Comprueba == 1) {
 //                
-//                valorId = id;
+//                valorIdcliente = id;
 //                txtNit.setText(cod);
 //                txtNombrecliente.setText(nombre);
 //                
@@ -179,10 +179,10 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 if (Comprueba == 1) {
 
-//                valorId = id;
+//                valorIdcliente = id;
 //                txtNit.setText(cod);
 //                txtNombrecliente.setText(nombre);
-                    valorId = (rs.getString("idClientes"));
+                    valorIdcliente = (rs.getString("idClientes"));
                     txtNit.setText(rs.getString("nit"));
                     txtNombrecliente.setText(rs.getString("nombre"));
                     txtDireccion.setText(rs.getString("direccion"));

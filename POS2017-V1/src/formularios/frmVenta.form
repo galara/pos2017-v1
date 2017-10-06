@@ -712,23 +712,34 @@
                       <Component id="bnDeudores" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bnEstadocuenta" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="264" max="32767" attributes="0"/>
+                      <EmptySpace pref="108" max="32767" attributes="0"/>
+                      <Component id="txtid" min="-2" pref="38" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="ventanumero" min="-2" pref="98" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="bnBuscar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="bnCrear" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="bnSuprimir" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="bnDeudores" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="bnEstadocuenta" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="bnEditar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="txtid" alignment="1" max="32767" attributes="0"/>
+                          <Component id="ventanumero" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="bnBuscar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="bnCrear" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="bnSuprimir" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="bnDeudores" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="bnEstadocuenta" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="bnEditar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -760,9 +771,6 @@
                 <Property name="text" type="java.lang.String" value="Crear"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bnCrearActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="bnSuprimir">
               <Properties>
@@ -823,6 +831,24 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bnEditarActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="ventanumero">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="opaque" type="boolean" value="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="txtid">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="opaque" type="boolean" value="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -1617,7 +1643,7 @@
                 <Component class="javax.swing.JTable" name="tableResultados">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="model = new DefaultTableModel(null, titulos)&#xa;    {&#xa;        @Override&#xa;        public boolean isCellEditable(int row, int column) {&#xa;            /*if(column==6  ){&#xa;                return true;&#xa;            }else{&#xa;                return false;}*/&#xa;            return false;&#xa;        }&#xa;    }" type="code"/>
+                      <Connection code="model = new DefaultTableModel(null, titulosdetalleventa)&#xa;    {&#xa;        @Override&#xa;        public boolean isCellEditable(int row, int column) {&#xa;            /*if(column==6  ){&#xa;                return true;&#xa;            }else{&#xa;                return false;}*/&#xa;            return false;&#xa;        }&#xa;    }" type="code"/>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0"/>

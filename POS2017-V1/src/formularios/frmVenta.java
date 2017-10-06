@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import clases.AccesoUsuario;
 import clases.Datos;
 import clases.FormatoDecimal;
 import clases.Peticiones;
@@ -19,6 +20,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import static formularios.buscar_cliente.Comprueba;
+import modelos.Opcion;
 
 /**
  *
@@ -29,11 +31,19 @@ public class frmVenta extends javax.swing.JInternalFrame {
     /**
      * Variables para realizar las transacciones con la base de datos
      */
-    String nombreTabla = "clientes";
-    String[] titulos = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio.Norm", "Precio C.Desc", "Descuento %", "Subtotal", "Precio Costo"};
-    String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
-    String nombreId = "idClientes";
-    public static String valorId = "";
+    String nombreTabla = "venta";
+    String nombreId = "idventa";
+    String idventa = "";
+    String camposventa = "fecha, total, saldo, num_venta, fechadepago, idclientes, idusuario, idtipopago, monto_desc, porc_desc, estado";
+
+    String nombreTabla2 = "ventadetalle";
+    String nombreId2 = "idventadetalle";
+    String camposdetalleventa = "cantidad, precio, idlote, idventa, subtotal";
+
+    String[] titulosdetalleventa = {"Id", "Código", "Descripción del producto", "Cantidad", "Unidad", "Precio.Norm", "Precio C.Desc", "Descuento %", "Subtotal", "Precio Costo", "Idfila"};
+    //String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
+    public static String valorIdcliente = "";
+    public static String valorIdtipopago = "1";
 
     DefaultTableModel model;
     Datos datos = new Datos();
@@ -65,18 +75,17 @@ public class frmVenta extends javax.swing.JInternalFrame {
     }
 
     /**
-     * Prepara el formulario y jtable para crear un nuevo cliente (Habilita y
+     * Prepara el formulario y jtable para crear un nuevo venta (Habilita y
      * limpia los campos correspondientes
      */
-    public void nuevo() {
-        //Utilidades.setEditableTexto(this.panelFormulario, true, null, true, "");
-        //Utilidades.setEditableTexto(this.panelBusqueda, false, null, true, "");
-//        Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
-//        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
-//        model.setRowCount(0);
-//        txtBusqueda.requestFocus();
-    }
-
+//    public void nuevo() {
+//        //Utilidades.setEditableTexto(this.panelFormulario, true, null, true, "");
+//        //Utilidades.setEditableTexto(this.panelBusqueda, false, null, true, "");
+////        Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
+////        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
+////        model.setRowCount(0);
+////        txtBusqueda.requestFocus();
+//    }
     private String Validar(String x) {
         String y;
         if (x.equals("")) {
@@ -182,6 +191,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
             model.setValueAt(subtotal, s, 8);
         }
         sumar_total();
+
+        //***********actualizar bd venta y detalle de venta.
+        ModificarVenta(idventa);
+        ModificarDetalleVentaPrecio();
+
         cambiar_precio.dispose();
     }
 
@@ -215,6 +229,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
             model.setValueAt(subtotal, s, 8);
         }
         sumar_total();
+
+        //***********actualizar bd venta y detalle de venta.
+        ModificarVenta(idventa);
+        ModificarDetalleVentaCantidad();
+
         cambiar_cantidad.dispose();
     }
 
@@ -259,7 +278,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         }
     }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un venta en especifico
      por el código, nombre, nit  */
     public void buscarCliente(String nombre) {
 
@@ -282,7 +301,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
                 /* Hacemos un while que mientras en rs hallan datos el ira agregando filas a la tabla. */
                 while (rs.next()) {
 
-                    valorId = rs.getString("idClientes");
+                    valorIdcliente = rs.getString("idClientes");
                     txtNit.setText(rs.getString("nit"));
                     txtNombrecliente.setText(rs.getString("nombre"));
                     txtDireccion.setText(rs.getString("direccion"));
@@ -290,13 +309,17 @@ public class frmVenta extends javax.swing.JInternalFrame {
                 txtBusquedap.requestFocus();
                 txtBusquedap.setEditable(true);
             }
+            if (txtid.getText().equals("")) {
+            } else {
+                ModificarVenta(txtid.getText());
+            }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, "Error: " + ex.getMessage());
         }
     }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un venta en especifico
      por el código, nombre, nit  */
     public void buscarProducto_codigo(String nombre) {
 
@@ -351,11 +374,11 @@ public class frmVenta extends javax.swing.JInternalFrame {
         }
     }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un venta en especifico
      por el código, nombre, nit  */
     public void agregarProducto(String nombre) {
 
-        Object[] registro = new Object[10];
+        Object[] registro = new Object[11];
 
         registro[0] = txIdproducto.getText();
         registro[1] = txtCodigo.getText();
@@ -368,11 +391,44 @@ public class frmVenta extends javax.swing.JInternalFrame {
         registro[8] = Float.parseFloat(txtImporte.getText());
         registro[9] = Float.parseFloat(txtCosto.getText());
 
-        model.addRow(registro);
-        tableResultados.setModel(model);
+        Object[] registrodetalle = new Object[6];
 
-        Utilidades.ajustarAnchoColumnas(tableResultados);
-        sumar_total();
+        if (txtid.getText().equals("")) {
+            GuardarVenta();
+
+            registrodetalle[0] = Float.parseFloat(txtCantidad.getText());
+            registrodetalle[1] = Float.parseFloat(txtPreciocondescuento.getText());
+            registrodetalle[2] = "3";//txIdproducto.getText();
+            registrodetalle[3] = idventa;
+            registrodetalle[4] = Float.parseFloat(txtDescuento.getText());
+            registrodetalle[5] = Float.parseFloat(txtImporte.getText());
+
+            int id = (GuardarDetalleVenta(registrodetalle));
+            registro[10] = id;
+
+            model.addRow(registro);
+            tableResultados.setModel(model);
+            Utilidades.ajustarAnchoColumnas(tableResultados);
+            sumar_total();
+            ModificarVenta(txtid.getText());
+        } else {
+            registrodetalle[0] = Float.parseFloat(txtCantidad.getText());
+            registrodetalle[1] = Float.parseFloat(txtPreciocondescuento.getText());
+            registrodetalle[2] = "3";//txIdproducto.getText();
+            registrodetalle[3] = idventa;
+            registrodetalle[4] = Float.parseFloat(txtDescuento.getText());
+            registrodetalle[5] = Float.parseFloat(txtImporte.getText());
+
+            int id = (GuardarDetalleVenta(registrodetalle));
+            registro[10] = id;
+
+            model.addRow(registro);
+            tableResultados.setModel(model);
+            Utilidades.ajustarAnchoColumnas(tableResultados);
+            sumar_total();
+            ModificarVenta(txtid.getText());
+        }
+
         txIdproducto.setText("");
         txtBusquedap.setText("");
         txtCodigo.setText("");
@@ -380,6 +436,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         txtUnidad.setText("");
         txtCantidad.setValue(null);
         txtPrecio.setValue(null);
+        txtPreciocondescuento.setValue(null);
         txtDescuento.setValue(null);
         txtImporte.setValue(null);
         txtCosto.setValue(null);
@@ -387,7 +444,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         txtBusquedap.requestFocus();
     }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un venta en especifico
      por el código, nombre, nit  */
     public void llenarTabla(String nombre) {
 
@@ -425,35 +482,52 @@ public class frmVenta extends javax.swing.JInternalFrame {
     }
 
     /**
-     * Realiza la transacción para guardar los recistros de un nuevo cliente
+     * Realiza la transacción para guardar los recistros de un nuevo venta
      */
-    private void Guardar() {
+    private void GuardarVenta() {
 
-//        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
-//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-        Object[] cliente = {
-            /*txtCodigo.getText(), txtNombre.getText(),*/txtNit.getText(),
-            /*txtCorreo.getText(), txtNit.getText(),
-            txtTelefono.getText(), getFecha(), */ Validar(txtTotal.getText())/*,
-            peticiones.selected(rbEstado)*/
-        };
+        String campoventas = "fecha, total, saldo, idclientes, idusuario, idtipopago, estado";
+        Object[] venta = {getFecha(), Validar(txtTotal.getText()), Validar(txtTotal.getText()), valorIdcliente, AccesoUsuario.idusu(), valorIdtipopago, "1"};
 
-        /* Llamamos a la funcion guardarRegistros la cual recibe como parametro
-         el nombre de la tabla, los campos y los valores a insertar del cliente */
-        if (peticiones.guardarRegistros(nombreTabla, campos, cliente)) {
-            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Guardado correctamente ");
-            nuevo();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "No se ha podido Guardar el registro, por favor verifique los datos");
+        /* Llamamos a la funcion guardarRegistrosId la cual recibe como parametro
+         el nombre de la tabla, los campos y los valores a insertar del producto */
+        int id = peticiones.guardarRegistrosId(nombreTabla, campoventas, venta);
+        if (id != 0) {
+            txtid.setText("" + id);
+            idventa = "" + id;
         }
     }
 
     /**
      * Modifica el registro seleccionado
      */
-    private void Modificar() {
+    private void ModificarVenta(String idventa) {
+        int id = Integer.parseInt(idventa);
+
+        String campoventa = "fecha, total, saldo, idclientes";
+        Object[] venta = {getFecha(), Validar(txtTotal.getText()), Validar(txtTotal.getText()), valorIdcliente, id};
+
+        boolean res = peticiones.actualizarRegistroId(nombreTabla, campoventa, venta, nombreId);
+    }
+
+    /**
+     * Realiza la transacción para guardar los recistros de un nuevo venta
+     */
+    private int GuardarDetalleVenta(Object[] detalle) {
+
+        String camposdetalleventas = "cantidad, precio, idlote, idventa, descuento, subtotal";
+
+        /* Llamamos a la funcion guardarRegistrosId la cual recibe como parametro
+         el nombre de la tabla, los campos y los valores a insertar del producto */
+        int id = peticiones.guardarRegistrosId(nombreTabla2, camposdetalleventas, detalle);
+        return id;
+
+    }
+
+    /**
+     * Modifica el registro seleccionado
+     */
+    private void ModificarDetalleVentaPrecio() {
         int s = 0;
 
         /* Guardamos el ID de dla fila selecciona en la variable s */
@@ -465,54 +539,69 @@ public class frmVenta extends javax.swing.JInternalFrame {
             return;
         }
 
-//        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
-//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son"
-//                    + " Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 10));
+        String camposdetalleventas = "precio, descuento, subtotal";
 
-        Object[] cliente = {
-            /*txtCodigo.getText(), txtNombre.getText(),*/txtNit.getText(),
-            /*txtCorreo.getText(), txtNit.getText(),
-            txtTelefono.getText(),*/ getFecha(), Validar(txtTotal.getText()),
-            /*peticiones.selected(rbEstado),*/ id
-        };
+        Object[] registrodetalle = new Object[4];
 
-        if (peticiones.actualizarRegistroId(nombreTabla, campos, cliente, nombreId)) {
-            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Modificado correctamente ");
-            nuevo();
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "No se ha podido Modificar"
-                    + " registro, por favor verifique los datos");
-        }
+        registrodetalle[0] = Float.parseFloat("" + tableResultados.getValueAt(s, 6));
+        registrodetalle[1] = Float.parseFloat("" + tableResultados.getValueAt(s, 7));
+        registrodetalle[2] = Float.parseFloat("" + tableResultados.getValueAt(s, 8));
+        registrodetalle[3] = id;
+        boolean res = peticiones.actualizarRegistroId(nombreTabla2, camposdetalleventas, registrodetalle, nombreId2);
     }
 
     /**
-     * Al dar clic sobre la tabla, llenará el formulario con el registro
-     * seleccionado
+     * Modifica el registro seleccionado
      */
-    private void tableMouseClicked() {
-
-        /* Variable que contendra el ID de la fila seleccionada */
+    private void ModificarDetalleVentaCantidad() {
         int s = 0;
 
-        /* Limpiamos los campos del formulario */
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
-        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
-
-        /* Guardamos el ID de dla fila selecciona en la variable s*/
+        /* Guardamos el ID de dla fila selecciona en la variable s */
         s = tableResultados.getSelectedRow();
-        System.out.print("selected -" + tableResultados.getValueAt(s, 1).toString() + "\n");
+
         /* Validamos que hallan seleccionado */
         if (s < 0) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
             return;
         }
 
-        //llenarFormulario(s);
+        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 10));
+        String camposdetalleventas = "cantidad, precio, subtotal";
+
+        Object[] registrodetalle = new Object[4];
+
+        registrodetalle[0] = Float.parseFloat("" + tableResultados.getValueAt(s, 3));
+        registrodetalle[1] = Float.parseFloat("" + tableResultados.getValueAt(s, 6));
+        registrodetalle[2] = Float.parseFloat("" + tableResultados.getValueAt(s, 8));
+        registrodetalle[3] = id;
+        boolean res = peticiones.actualizarRegistroId(nombreTabla2, camposdetalleventas, registrodetalle, nombreId2);
     }
 
+//    /**
+//     * Al dar clic sobre la tabla, llenará el formulario con el registro
+//     * seleccionado
+//     */
+//    private void tableMouseClicked() {
+//
+//        /* Variable que contendra el ID de la fila seleccionada */
+//        int s = 0;
+//
+//        /* Limpiamos los campos del formulario */
+//        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
+//        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
+//
+//        /* Guardamos el ID de dla fila selecciona en la variable s*/
+//        s = tableResultados.getSelectedRow();
+//        //System.out.print("selected -" + tableResultados.getValueAt(s, 1).toString() + "\n");
+//        /* Validamos que hallan seleccionado */
+//        if (s < 0) {
+//            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+//            return;
+//        }
+//
+//        //llenarFormulario(s);
+//    }
     private void descuento() {
 
         Float precd, desc, dif, subtotal;
@@ -574,6 +663,8 @@ public class frmVenta extends javax.swing.JInternalFrame {
         bnDeudores = new javax.swing.JButton();
         bnEstadocuenta = new javax.swing.JButton();
         bnEditar = new javax.swing.JButton();
+        ventanumero = new javax.swing.JLabel();
+        txtid = new javax.swing.JLabel();
         panelBusqueda = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         txtNit = new elaprendiz.gui.textField.TextField();
@@ -974,11 +1065,6 @@ public class frmVenta extends javax.swing.JInternalFrame {
         bnCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/new.png"))); // NOI18N
         bnCrear.setText("Crear");
         bnCrear.setToolTipText("");
-        bnCrear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bnCrearActionPerformed(evt);
-            }
-        });
 
         bnSuprimir.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bnSuprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
@@ -1020,6 +1106,14 @@ public class frmVenta extends javax.swing.JInternalFrame {
             }
         });
 
+        ventanumero.setBackground(new java.awt.Color(255, 255, 255));
+        ventanumero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ventanumero.setOpaque(true);
+
+        txtid.setBackground(new java.awt.Color(255, 255, 255));
+        txtid.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtid.setOpaque(true);
+
         javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
         panelBotones.setLayout(panelBotonesLayout);
         panelBotonesLayout.setHorizontalGroup(
@@ -1037,20 +1131,29 @@ public class frmVenta extends javax.swing.JInternalFrame {
                 .addComponent(bnDeudores)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bnEstadocuenta)
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ventanumero, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBotonesLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBotonesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bnSuprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bnDeudores, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bnEstadocuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtid, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ventanumero, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBotonesLayout.createSequentialGroup()
+                        .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bnSuprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bnDeudores, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bnEstadocuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         panelImage.add(panelBotones);
@@ -1409,7 +1512,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         scrollpaneResultados.setBackground(new java.awt.Color(255, 255, 255));
         scrollpaneResultados.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableResultados.setModel(model = new DefaultTableModel(null, titulos)
+        tableResultados.setModel(model = new DefaultTableModel(null, titulosdetalleventa)
             {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -1577,17 +1680,17 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private void bnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnBuscarActionPerformed
         // TODO add your handling code here:
         //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
-        Utilidades.setEditableTexto(this.panelBusqueda, true, null, true, "");
-        Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
-        Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
-        model.setRowCount(0);
-        txtBusquedap.requestFocus();
+        //Utilidades.setEditableTexto(this.panelBusqueda, true, null, true, "");
+        //Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
+        //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
+        //model.setRowCount(0);
+        //txtBusquedap.requestFocus();
     }//GEN-LAST:event_bnBuscarActionPerformed
 
     private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
         // TODO add your handling code here:
         int resp;
-        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
+        resp = JOptionPane.showInternalConfirmDialog(this, "¿Borrar producto seleccinado?", "Confirmar", 0);
         if (resp == 0) {
             int s = 0;
 
@@ -1600,13 +1703,16 @@ public class frmVenta extends javax.swing.JInternalFrame {
                 return;
             }
 
-            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 10));
 
-            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
-                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
-                nuevo();
+            if ((peticiones.eliminarRegistro(nombreTabla2, "estado", nombreId2, id)) > 0) {
+                model.removeRow(s);
+                Utilidades.ajustarAnchoColumnas(tableResultados);
+                sumar_total();
+                ModificarVenta(idventa);
+                JOptionPane.showMessageDialog(rootPane, "El producto ha sido Eliminado");
             } else {
-                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el producto, por favor verifique los datos");
             }
         }
     }//GEN-LAST:event_bnSuprimirActionPerformed
@@ -1619,20 +1725,13 @@ public class frmVenta extends javax.swing.JInternalFrame {
         // TODO add your handling code here:       
     }//GEN-LAST:event_bnEstadocuentaActionPerformed
 
-    private void bnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnCrearActionPerformed
-        // TODO add your handling code here:  
-        editar = false;
-        nuevo();
-
-    }//GEN-LAST:event_bnCrearActionPerformed
-
     private void bnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnGuardarActionPerformed
 
-        if (editar == false) {
-            Guardar();
-        } else if (editar == true) {
-            Modificar();
-        }
+//        if (editar == false) {
+//            Guardar();
+//        } else if (editar == true) {
+//            Modificar();
+//        }
 
     }//GEN-LAST:event_bnGuardarActionPerformed
 
@@ -1655,26 +1754,26 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
     private void tableResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableResultadosMouseClicked
         // TODO add your handling code here:
-        tableMouseClicked();
+        //tableMouseClicked();
 
     }//GEN-LAST:event_tableResultadosMouseClicked
 
     private void bnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnEditarActionPerformed
 
-        int s = 0;
-
-        /* Guardamos el ID de dla fila selecciona en la variable s */
-        s = tableResultados.getSelectedRow();
-
-        /* Validamos que hallan seleccionado */
-        if (s < 0) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
-            return;
-        }
-        tableMouseClicked();
-        //Utilidades.setEditableTexto(this.panelFormulario, true, null, false, "");
-        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
-        editar = true;
+//        int s = 0;
+//
+//        /* Guardamos el ID de dla fila selecciona en la variable s */
+//        s = tableResultados.getSelectedRow();
+//
+//        /* Validamos que hallan seleccionado */
+//        if (s < 0) {
+//            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+//            return;
+//        }
+//        //tableMouseClicked();
+//        //Utilidades.setEditableTexto(this.panelFormulario, true, null, false, "");
+//        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
+//        editar = true;
     }//GEN-LAST:event_bnEditarActionPerformed
 
     private void txtNitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNitActionPerformed
@@ -1716,7 +1815,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
- 
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -1787,7 +1886,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
         /* Guardamos el ID de dla fila selecciona en la variable s*/
         s = tableResultados.getSelectedRow();
-        System.out.print("---" + tableResultados.getValueAt(s, 1).toString() + "\n");
+        //System.out.print("---" + tableResultados.getValueAt(s, 1).toString() + "\n");
         /* Validamos que hallan seleccionado */
         if (s == -1) {
             JOptionPane.showInternalMessageDialog(this, "Debe seleccionar un registro");
@@ -1963,5 +2062,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private javax.swing.JFormattedTextField txtPreciocondescuento;
     private javax.swing.JFormattedTextField txtTotal;
     private elaprendiz.gui.textField.TextField txtUnidad;
+    private javax.swing.JLabel txtid;
+    private javax.swing.JLabel ventanumero;
     // End of variables declaration//GEN-END:variables
 }
