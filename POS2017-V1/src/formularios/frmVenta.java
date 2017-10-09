@@ -19,7 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import static formularios.buscar_cliente.Comprueba;
+import static formularios.buscar_cliente.CompruebaC;
+import static formularios.buscar_productos.CompruebaP;
 import modelos.Opcion;
 
 /**
@@ -322,7 +323,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     /* Funcion para llenar la tabla cuando se busque un venta en especifico
      por el código, nombre, nit  */
     public void buscarProducto_codigo(String nombre) {
-
+    System.out.print("prueba3------------"+nombre+"-------\n");
         try {
             /* Limpiamos los campos*/
             txIdproducto.setText("");
@@ -378,6 +379,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
      por el código, nombre, nit  */
     public void agregarProducto(String nombre) {
 
+        System.out.print("prueba4----\n");
         Object[] registro = new Object[11];
 
         registro[0] = txIdproducto.getText();
@@ -1679,6 +1681,16 @@ public class frmVenta extends javax.swing.JInternalFrame {
 
     private void bnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnBuscarActionPerformed
         // TODO add your handling code here:
+        buscar_productos form = new buscar_productos();
+
+        CompruebaP = 1;
+        panel_center.add(form);
+
+        form.setIconifiable(true);
+        form.setClosable(true);
+        form.setMaximizable(true);
+        form.toFront();
+        form.setVisible(true);
         //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
         //Utilidades.setEditableTexto(this.panelBusqueda, true, null, true, "");
         //Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
@@ -1804,7 +1816,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         buscar_cliente form = new buscar_cliente();
 
-        Comprueba = 1;
+        CompruebaC = 1;
         panel_center.add(form);
 
         form.setIconifiable(true);
@@ -1821,6 +1833,7 @@ public class frmVenta extends javax.swing.JInternalFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         NewJPanel pvc = new NewJPanel();
+        CompruebaP = 1;
         JOptionPane.showInternalOptionDialog(this, pvc, "Buscar Producto: ", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, /*new Object[]{pvc.getLbAviso()},*/ null, null);
     }//GEN-LAST:event_jButton3ActionPerformed

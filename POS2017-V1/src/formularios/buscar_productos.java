@@ -9,31 +9,32 @@ import clases.Datos;
 import clases.Peticiones;
 import clases.Utilidades;
 import static formularios.frmVenta.txtBusquedap;
-import static formularios.frmVenta.txtDireccion;
-import static formularios.frmVenta.txtNit;
-import static formularios.frmVenta.txtNombrecliente;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Hashtable;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import static formularios.frmVenta.valorIdcliente;
 
 /**
  *
  * @author GLARA
  */
-public class buscar_cliente extends javax.swing.JInternalFrame {
+public class buscar_productos extends javax.swing.JInternalFrame {
 
-    static int CompruebaC;
+    static int CompruebaP;
     /**
      * Variables para realizar las transacciones con la base de datos
      */
-    String nombreTabla = "clientes";
-    String[] titulos = {"Id", "Código", "Nombre Cliente", "Dirección", "Nit", "Limite Créd"};
-    String campos = "codigo, nombre, direccion, correo, nit, telefono, fec_reg, lim_cred, estado";
-    String nombreId = "idClientes";
+    String nombreTabla = "producto";
+    String[] titulos = {"Id", "Código", "Descripción Producto", "Costo", "Precio Venta", "Precio Mayoreo", "Unidad", "Categoria", "Estado", "Fecha Reg",};
+    String campos = "codigo, nombre, idunidad, idCategoria, observacion, "
+            + "fec_reg, estado, ubicacion, invminimo, existencia, preciocoste, precioventa, preciomayoreo";
+    String nombreId = "idproducto";
+
+    public Hashtable<String, String> hashUnidad = new Hashtable<>();
+    public Hashtable<String, String> hashUnidad2 = new Hashtable<>();
+    public Hashtable<String, String> hashCategoria = new Hashtable<>();
+    public Hashtable<String, String> hashCategoria2 = new Hashtable<>();
 
     DefaultTableModel model;
     Datos datos = new Datos();
@@ -41,10 +42,11 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
     boolean editar = false;
 
     /**
-     * Creates new form Cliente
+     * Creates new form Productos
      */
-    public buscar_cliente() {
+    public buscar_productos() {
         initComponents();
+        //llenarcombobox();
 
         /**
          * Oculta la primer columna de la tala, la que contiene el Id
@@ -54,15 +56,76 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         tableResultados.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
 
-    /**
-     * Prepara el formulario y jtable para crear un nuevo cliente (Habilita y
-     * limpia los campos correspondientes
-     */
-//    public void nuevo() {
-//        Utilidades.setEditableTexto(this.panelFormulario, true, null, true, "");
+//    private void llenarcombobox() {
+//
+//        try {
+//
+//            /* Instaciamos un objeto de la clase Opcion para cargar el combo box
+//             de los proveedores  */
+//            Opcion op = new Opcion("0", " ");
+//
+//            /* Añadimos el primer elemento al combo box */
+//            comboUnidad.addItem(op);
+//
+//            /* Llamos a la funcion consultaUnidad la cual nos devuelve todas las
+//             Unidades que hay, esos datos los guardamos en un ResultSet para luego
+//             llenar el combo box con todas las Unidades */
+//            ResultSet rs = peticiones.consultaUnidad("");
+//
+//            /* Hacemos un while que mientras hallan registros en rs, sobreescrira
+//             al objeto de la clase opcion con los datos del objeto rs, y los añada
+//             al combo box */
+//            int count = 0;
+//            while (rs.next()) {
+//                count++;
+//                op = new Opcion(
+//                        rs.getString("idUnidad"),
+//                        rs.getString("nombre"));
+//                comboUnidad.addItem(op);
+//                hashUnidad.put(rs.getString("nombre"), "" + count);
+//                hashUnidad2.put(rs.getString("idUnidad"), rs.getString("nombre"));
+//            }
+//
+//            /* Instaciamos un objeto de la clase Opcion para cargar el combo box
+//             de los servicios  */
+//            Opcion op2 = new Opcion("0", " ");
+//
+//            /* Añadimos el primer elemento al combo box */
+//            comboCategoria.addItem(op2);
+//
+//            /* Llamos a la funcion getServicios la cual nos devuelve todos los
+//             Servicios que hay, esos datos los guardamos en un ResultSet para luego
+//             llenar el combo box con todos los Servicios */
+//            ResultSet rsSer = peticiones.consultaCategoria("");
+//
+//            /* Hacemos un while que mientras hallan registros en rs, sobreescrira
+//             al objeto de la clase opcion con los datos del objeto rs, y los añada
+//             al combo box */
+//            int count2 = 0;
+//            while (rsSer.next()) {
+//                count2++;
+//                op2 = new Opcion(
+//                        rsSer.getString("idCategoria"),
+//                        rsSer.getString("nombre"));
+//                comboCategoria.addItem(op2);
+//                hashCategoria.put(rsSer.getString("nombre"), "" + count2);
+//                hashCategoria2.put(rsSer.getString("idCategoria"), rsSer.getString("nombre"));
+//            }
+//        } catch (SQLException e) {
+//            JOptionPane.showMessageDialog(null, "Problema con: " + e.getMessage());
+//        }
+//    }
+//    /**
+//     * Prepara el formulario y jtable para crear un nuevo producto (Habilita y
+//     * limpia los campos correspondientes
+//     */
+//    private void nuevo() {
+//        Utilidades.setEditableTexto(this.tbPane2, true, null, true, "");
 //        //Utilidades.setEditableTexto(this.panelBusqueda, false, null, true, "");
 //        Utilidades.setEditableTexto(this.panelResultados, false, null, true, "");
 //        Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
+//        //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
+//
 //        model.setRowCount(0);
 //        txtCodigo.requestFocus();
 //    }
@@ -102,35 +165,43 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 //        return null;
 //    }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un producto en especifico
      por el código, nombre, nit  */
-    public void llenarTabla(String nombre) {
+    private void llenarTabla(String nombre) {
 
         try {
             /* Limpiamos la tabla */
             model.setRowCount(0);
 
-            /* Llamamos a la funcion consultaClientes la cual nos devuelve todos 
-             los clientes relaciones con el valor a buscar en la base de datos. 
+            /* Llamamos a la funcion consultaProducto la cual nos devuelve todos 
+             los productos relaciones con el valor a buscar en la base de datos. 
             
              - Los datos recibidos lo guardamos en el objeto ResulSet para luego
              llenar la tabla con los registros.
             
              */
-            ResultSet rs = peticiones.consultaClientes(nombre);
-            Object[] registro = new Object[7];
+            ResultSet rs = peticiones.Buacar_Producto(nombre);
+            Object[] registro = new Object[10];
 
             /* Hacemos un while que mientras en rs hallan datos el ira agregando
              filas a la tabla. */
             while (rs.next()) {
 
-                registro[0] = rs.getString("idClientes");
-                registro[1] = rs.getString("codigo");
-                registro[2] = rs.getString("nombre");
-                registro[3] = rs.getString("direccion");
-                registro[4] = rs.getString("nit");
-                registro[5] = rs.getString("lim_cred");
-                //registro[6] = rs.getBoolean("estado"); //getString("lim_cred");
+                registro[0] = rs.getString("producto.idproducto");
+                registro[1] = rs.getString("producto.codigo");
+                registro[2] = rs.getString("producto.nombre");
+                registro[3] = rs.getString("producto.preciocoste");
+                registro[4] = rs.getString("producto.precioventa");
+                registro[5] = rs.getString("producto.preciomayoreo");
+                registro[6] = rs.getString("unidad.nombre");
+                registro[7] = rs.getString("categoria.nombre");
+
+                if (rs.getString("estado").equals("1")) {
+                    registro[8] = ("Activo");
+                } else if (rs.getString("estado").equals("0")) {
+                    registro[8] = ("Inactivo");
+                }
+                registro[9] = rs.getString("fec_reg");
                 model.addRow(registro);
             }
             tableResultados.setModel(model);
@@ -140,79 +211,69 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         }
     }
 
-    /* Funcion para llenar la tabla cuando se busque un cliente en especifico
+    /* Funcion para llenar la tabla cuando se busque un producto en especifico
      por el Id */
-    public void llenarFormulario(int s) {
+    private void llenarFormulario(int s) {
 
-        try {
-            /* Llamamos a la funcion consultaRegistrosId la cual nos devuelve todos
-            los empleados relaciones con el id a buscar en la base de datos.
-            
-            - Los datos recibidos lo guardamos en el objeto ResulSet para luego
-            llenar la tabla con los registros.
-            
-             */
-//            String id;
-//            String cod;
-//            String nombre;
-//            id = tableResultados.getValueAt(s, 0).toString();
-//            cod = tableResultados.getValueAt(s, 4).toString();
-//            nombre = tableResultados.getValueAt(s, 2).toString();
+        /* Llamamos a la funcion consultaRegistrosId la cual nos devuelve todos
+        los productos relaciones con el id a buscar en la base de datos.
+        
+        - Los datos recibidos lo guardamos en el objeto ResulSet para luego
+        llenar la tabla con los registros.
+        
+         */
+        ResultSet rs = peticiones.consultaRegistrosId(nombreTabla,
+                (String) tableResultados.getValueAt(s, 0), nombreId);
+        //System.out.print((String) tableResultados.getValueAt(s, 0) + "codigo1---: \n");
+        /* Hacemos un while que mientras en rs hallan datos el ira agregando
+        filas a la tabla. */
 
-//            if (Comprueba == 1) {
-//                
-//                valorIdcliente = id;
-//                txtNit.setText(cod);
-//                txtNombrecliente.setText(nombre);
-//                
-//            }
-//            if (Comprueba == 2) {
-////            frmVenta.txtNit.setText(cod);
-////            frmVenta.txtNombrecliente.setText(nombre);
-//            }
-            ResultSet rs = peticiones.consultaRegistrosId(nombreTabla,
-                    (String) tableResultados.getValueAt(s, 0), nombreId);
-
-            /* Hacemos un while que mientras en rs hallan datos el ira agregando
-            filas a la tabla. */
-            while (rs.next()) {
-                if (CompruebaC == 1) {
-                    valorIdcliente = (rs.getString("idClientes"));
-                    txtNit.setText(rs.getString("nit"));
-                    txtNombrecliente.setText(rs.getString("nombre"));
-                    txtDireccion.setText(rs.getString("direccion"));
-                }
-                if (CompruebaC == 2) {
-                }
-            }
+        //            while (rs.next()) {
+        if (CompruebaP == 1) {
+            txtBusquedap.setText("" + tableResultados.getValueAt(s, 1));
             txtBusquedap.requestFocus();
-            txtBusquedap.setEditable(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(buscar_cliente.class.getName()).log(Level.SEVERE, null, ex);
+            //txtBusquedap.setText(rs.getString("codigo"));
         }
+//            }
+        //frmVenta form = new frmVenta();
+        //System.out.print(txtBusquedap.getText() + "codigo2---: \n");
+
+        //form.buscarProducto_codigo("" + tableResultados.getValueAt(s, 1));
+        this.dispose();
     }
 
 //    /**
-//     * Realiza la transacción para guardar los recistros de un nuevo cliente
+//     * Realiza la transacción para guardar los recistros de un nuevo producto
 //     */
 //    private void Guardar() {
 //
 //        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
+//
+//            Utilidades.esObligatorio(this.panelFormulario1, true);
 //            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
 //            return;
 //        }
+//        if (Utilidades.esObligatorio(this.panelFormulario1, true)) {
 //
-//        Object[] cliente = {
-//            txtCodigo.getText(), txtNombre.getText(), txtDireccion.getText(),
-//            txtCorreo.getText(), txtNit.getText(),
-//            txtTelefono.getText(), getFecha(), Validar(txtLimitecredito.getText()),
-//            peticiones.selected(rbEstado)
+//            Utilidades.esObligatorio(this.panelFormulario, true);
+//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        Object[] producto = {
+//            txtCodigo.getText(), txtNombre.getText(),
+//            Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
+//            Integer.parseInt(((Opcion) comboCategoria.getSelectedItem()).getValor()),
+//            txtObservacion.getText(), getFecha(),
+//            peticiones.selected(rbEstado), txtUbicacion.getText(), Validar(txtMinimo.getText()),
+//            Validar(txtExistencia.getText()), Validar(txtCosto.getText()), Validar(txtVenta.getText()),
+//            Validar(txtMayoreo.getText())
 //        };
 //
-//        /* Llamamos a la funcion guardarRegistros la cual recibe como parametro
-//         el nombre de la tabla, los campos y los valores a insertar del cliente */
-//        if (peticiones.guardarRegistros(nombreTabla, campos, cliente)) {
+//        /* Llamamos a la funcion guardarRegistrosId la cual recibe como parametro
+//         el nombre de la tabla, los campos y los valores a insertar del producto */
+//        int id = peticiones.guardarRegistrosId(nombreTabla, campos, producto);
+//
+//        if (id != 0) {
 //            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Guardado correctamente ");
 //            nuevo();
 //        } else {
@@ -235,21 +296,31 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 //        }
 //
 //        if (Utilidades.esObligatorio(this.panelFormulario, true)) {
-//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son"
-//                    + " Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+//
+//            Utilidades.esObligatorio(this.panelFormulario1, true);
+//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        if (Utilidades.esObligatorio(this.panelFormulario1, true)) {
+//
+//            Utilidades.esObligatorio(this.panelFormulario, true);
+//            JOptionPane.showInternalMessageDialog(this, "Los campos marcados son Obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
 //            return;
 //        }
 //
 //        String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
 //
-//        Object[] cliente = {
-//            txtCodigo.getText(), txtNombre.getText(), txtDireccion.getText(),
-//            txtCorreo.getText(), txtNit.getText(),
-//            txtTelefono.getText(), getFecha(), Validar(txtLimitecredito.getText()),
-//            peticiones.selected(rbEstado), id
+//        Object[] producto = {
+//            txtCodigo.getText(), txtNombre.getText(),
+//            Integer.parseInt(((Opcion) comboUnidad.getSelectedItem()).getValor()),
+//            Integer.parseInt(((Opcion) comboCategoria.getSelectedItem()).getValor()),
+//            txtObservacion.getText(), getFecha(),
+//            peticiones.selected(rbEstado), txtUbicacion.getText(), Validar(txtMinimo.getText()),
+//            Validar(txtExistencia.getText()), Validar(txtCosto.getText()), Validar(txtVenta.getText()),
+//            Validar(txtMayoreo.getText()), id
 //        };
 //
-//        if (peticiones.actualizarRegistroId(nombreTabla, campos, cliente, nombreId)) {
+//        if (peticiones.actualizarRegistroId(nombreTabla, campos, producto, nombreId)) {
 //            JOptionPane.showMessageDialog(rootPane, "El registro ha sido Modificado correctamente ");
 //            nuevo();
 //        } else {
@@ -267,7 +338,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         int s = 0;
 
         /* Limpiamos los campos del formulario */
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
+        //Utilidades.setEditableTexto(this.tbPane2, false, null, true, "");
         //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
 
         /* Guardamos el ID de dla fila selecciona en la variable s*/
@@ -310,7 +381,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(905, 401));
-        setName("buscar_clientes"); // NOI18N
+        setName("buscar_producto"); // NOI18N
         setOpaque(true);
         setPreferredSize(new java.awt.Dimension(905, 401));
 
@@ -335,11 +406,21 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         bnCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/new.png"))); // NOI18N
         bnCrear.setText("Crear");
         bnCrear.setToolTipText("");
+        bnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bnCrearActionPerformed(evt);
+            }
+        });
 
         bnSuprimir.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bnSuprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
         bnSuprimir.setText("Suprimir");
         bnSuprimir.setToolTipText("");
+        bnSuprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bnSuprimirActionPerformed(evt);
+            }
+        });
 
         bnDeudores.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bnDeudores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/deudores.png"))); // NOI18N
@@ -365,6 +446,11 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         bnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/update.png"))); // NOI18N
         bnEditar.setText("Editar");
         bnEditar.setToolTipText("");
+        bnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
         panelBotones.setLayout(panelBotonesLayout);
@@ -409,7 +495,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 
         labelBusqueda.setFont(new java.awt.Font("Decker", 1, 22)); // NOI18N
         labelBusqueda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelBusqueda.setText("Buscar Cliente");
+        labelBusqueda.setText("Buscar Producto");
         panelBusqueda.add(labelBusqueda);
         labelBusqueda.setBounds(240, 10, 380, 28);
 
@@ -433,6 +519,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         scrollpaneResultados.setBackground(new java.awt.Color(255, 255, 255));
         scrollpaneResultados.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        tableResultados.setAutoCreateRowSorter(true);
         tableResultados.setModel(model = new DefaultTableModel(null, titulos)
             {
                 @Override
@@ -466,7 +553,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 
             labelEncabezado.setFont(new java.awt.Font("Decker", 1, 17)); // NOI18N
             labelEncabezado.setForeground(new java.awt.Color(255, 255, 255));
-            labelEncabezado.setText("CLIENTES");
+            labelEncabezado.setText("BUSCAR PRODUCTOS");
 
             javax.swing.GroupLayout panelEncabezadoLayout = new javax.swing.GroupLayout(panelEncabezado);
             panelEncabezado.setLayout(panelEncabezadoLayout);
@@ -481,7 +568,7 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
                 panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelEncabezadoLayout.createSequentialGroup()
                     .addComponent(labelEncabezado)
-                    .addGap(0, 1, Short.MAX_VALUE))
+                    .addGap(0, 0, Short.MAX_VALUE))
             );
 
             panelImage.add(panelEncabezado);
@@ -494,13 +581,40 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
 
     private void bnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnBuscarActionPerformed
         // TODO add your handling code here:
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
+        //Utilidades.setEditableTexto(this.tbPane2, false, null, true, "");
         Utilidades.setEditableTexto(this.panelBusqueda, true, null, true, "");
         Utilidades.setEditableTexto(this.panelResultados, true, null, true, "");
         //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
         model.setRowCount(0);
         txtBusqueda.requestFocus();
     }//GEN-LAST:event_bnBuscarActionPerformed
+
+    private void bnSuprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnSuprimirActionPerformed
+        // TODO add your handling code here:
+        int resp;
+        resp = JOptionPane.showInternalConfirmDialog(this, "¿Desea Eliminar el Registro?", "Pregunta", 0);
+        if (resp == 0) {
+            int s = 0;
+
+            /* Guardamos el ID de dla fila selecciona en la variable s */
+            s = tableResultados.getSelectedRow();
+
+            /* Validamos que hallan seleccionado */
+            if (s < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+                return;
+            }
+
+            String id = Utilidades.objectToString(tableResultados.getValueAt(s, 0));
+
+            if ((peticiones.eliminarRegistro(nombreTabla, "estado", nombreId, id)) > 0) {
+                JOptionPane.showMessageDialog(rootPane, "El registro ha sido Eliminado correctamente ");
+                //nuevo();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "No se ha podido Eliminar el registro, por favor verifique los datos");
+            }
+        }
+    }//GEN-LAST:event_bnSuprimirActionPerformed
 
     private void bnDeudoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnDeudoresActionPerformed
         // TODO add your handling code here:
@@ -510,13 +624,40 @@ public class buscar_cliente extends javax.swing.JInternalFrame {
         // TODO add your handling code here:       
     }//GEN-LAST:event_bnEstadocuentaActionPerformed
 
+    private void bnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnCrearActionPerformed
+        // TODO add your handling code here:  
+        editar = false;
+        //nuevo();
+
+    }//GEN-LAST:event_bnCrearActionPerformed
+
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
         llenarTabla(txtBusqueda.getText());
-        //Utilidades.setEditableTexto(this.panelFormulario, false, null, true, "");
+        //Utilidades.setEditableTexto(this.tbPane2, false, null, true, "");
         //Utilidades.buscarBotones(this.panelBotonesformulario, false, null);
+        //Utilidades.buscarMenu(this.jTabbedPane1, false, editar);
 
     }//GEN-LAST:event_txtBusquedaActionPerformed
+
+    private void bnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bnEditarActionPerformed
+
+        int s = 0;
+
+        /* Guardamos el ID de dla fila selecciona en la variable s */
+        s = tableResultados.getSelectedRow();
+
+        /* Validamos que hallan seleccionado */
+        if (s < 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un registro");
+            return;
+        }
+        //tableMouseClicked();
+        //Utilidades.setEditableTexto(this.tbPane2, true, null, false, "");
+        // Utilidades.buscarBotones(this.panelBotonesformulario, true, null);
+        //Utilidades.buscarMenu(this.jTabbedPane1, true, editar);
+        editar = true;
+    }//GEN-LAST:event_bnEditarActionPerformed
 
     private void tableResultadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableResultadosKeyPressed
         // TODO add your handling code here:
